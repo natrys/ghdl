@@ -1,10 +1,13 @@
+(setv packages [])
+
 (import hy hy.importer)
-(import os stat re shutil glob platform)
+(import sys os stat re shutil glob platform)
 
 (import [xdg [XDG_CONFIG_HOME]] pathlib)
 (setv config-file (/ XDG_CONFIG_HOME (pathlib.Path "ghdl/config")))
 
 (import schema utils)
+
 
 (setv Config (schema.Config))
 (defn config [&kwargs conf]
@@ -12,11 +15,11 @@
       (setv Config.token (get conf "token")))
   (setv Config.location
         (os.path.expanduser
-          (if (in "location" conf) (get conf "location") "~/.local/bin/")))
+          (if (in "location" conf)
+              (get conf "location")
+              Config.location)))
   (utils.make-dir Config.location))
 
-
-(setv packages [])
 
 (defn repo [name &kwargs info]
   (setv record (schema.Record))
@@ -31,25 +34,15 @@
   (setv record.url-filter (get info "url_filter"))
 
   (if (in "archive" info)
-      (setv record.isArchive? (get info "archive")
-            record.archive-glob (get info "archive_glob")))
+      (setv record.isArchive? (get info "archive")))
+
+  (if record.isArchive?
+      (if (in "bin_glob" info)
+          (setv record.bin-glob (get info "bin_glob"))
+          (do (print f"Provide 'bin-glob' for {record.repo}") (sys.exit))))
   
   (-> packages (.append record)))
 
 
-
 (with [f (open config-file)]
   (hy.eval (hy.importer.hy-parse (.read f))))
-
-(if (= __name__ "__main__")
-    (do
-      (setv taskell (get packages 1))
-
-      (setv testcase
-            ["taskell-1.9.3_x86-64-linux.deb" "taskell-1.9.3_x86-64-linux.tar.gz"
-             "taskell-static-1.9.3_x86-64-mac.tar.gz"])
-
-      (for [url testcase]
-        (if (taskell.url-filter url)
-            (print url)))
-      ))

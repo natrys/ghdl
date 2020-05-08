@@ -1,14 +1,8 @@
-(import [enum [Enum]])
-
 (defclass Config []
   (defn __init__ [self]
     (setv self.token None
-          self.location "~/.local/bin/"))
+          self.location "~/.local/bin/")))
 
-  (defn pretty [self]
-    (print f"token: {self.token}")
-    (print f"location: {self.location}")
-    (print "---------------")))
 
 (defclass Record []
   (defn __init__ [self]
@@ -22,11 +16,5 @@
     (print f"Exists?: {self.exists?}")
     (print f"Update?: {self.toUpdate?}")
     (print f"Archive?: {self.isArchive?}")
-    (print f"url: {self.url}")
+    (print f"URL: {self.url}")
     (print "---------------")))
-
-
-(if (= __name__ "__main__")
-    (do
-      (setv rec (Record))
-      (print rec.toUpdate)))

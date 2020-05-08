@@ -1,10 +1,12 @@
 (import sqlite3 pathlib utils)
 (import [xdg [XDG_DATA_HOME]])
 
+
 (defclass Record []
   (defn __init__ [self repo timestamp]
     (setv self.repo repo)
     (setv self.timestamp timestamp)))
+
 
 (defclass LocalRecord []
   (defn __init__ [self]
@@ -45,5 +47,5 @@
     (with [con self.connection]
       (con.execute command (, repo))))
 
-  (defn finalise []
+  (defn finalise [self]
     (self.connection.close)))
