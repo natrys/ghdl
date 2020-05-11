@@ -11,13 +11,13 @@
   (defn __init__ [self]
     (setv self.toUpdate? True
           self.exists? False
-          self.isArchive? False))
+          self.isArchive? True))
 
   (defn pretty [self]
     (print f"Repo: {self.repo}")
-    (print f"Bin: {self.bin}")
+    (print f"Name: {self.name}")
     (print f"Exists?: {self.exists?}")
     (print f"Update?: {self.toUpdate?}")
-    (print f"Archive?: {self.isArchive?}")
+    ;(print f"Archive?: {self.isArchive?}")
     (print f"URL: {self.url}")
     (print "---------------")))

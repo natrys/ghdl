@@ -1,4 +1,4 @@
-(import xtract)
+(import filetype xtract)
 
 (import os glob re shutil traceback time)
 (import [ghdl.config :as config]
@@ -43,7 +43,6 @@
   (setv local (local-metadata.fetch-row record.repo))
   (when local
     (setv record.exists? True)
-                                ;(print f"{local.repo} {local.timestamp} | {record.repo} {record.timestamp}")
     (if (<= record.timestamp local.timestamp)
         (setv record.toUpdate? False))))
 
@@ -69,21 +68,19 @@
 
 (defn process [record]
   (with [(utils.Tempdir)]
-    (setv filename
-          (if record.isArchive?
-              (-> record.url (.split "/") (get -1))
-              record.bin))
+    (setv filename (-> record.url (.split "/") (get -1)))
     (utils.download_file record.url filename)
-    
-    (when record.isArchive?
+
+    (when (and record.isArchive? (filetype.archive-match filename))
       (xtract.xtract filename :all True)
+      (os.remove filename)
       (setv filename
-            (get (glob.glob f"**/{record.bin-glob}" :recursive True) 0)))
-    
-    (shutil.move filename record.bin)
-    (utils.make-executable record.bin)
-    (setv destination (os.path.join config.Config.location record.bin))
-    (shutil.move record.bin destination)
+            (get (glob.glob f"**/{record.basename-glob}" :recursive True) 0)))
+
+    (shutil.move filename record.name)
+    (utils.make-executable record.name)
+    (setv destination (os.path.join config.Config.location record.name))
+    (shutil.move record.name destination)
     (if record.exists?
         (local-metadata.update-row record.repo record.timestamp)
         (local-metadata.add-row record.repo record.timestamp))))

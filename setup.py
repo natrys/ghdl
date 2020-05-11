@@ -8,14 +8,15 @@ package_data = \
 {'': ['*']}
 
 install_requires = \
-['hy>=0.18.0,<0.19.0',
+['filetype>=1.0.7,<2.0.0',
+ 'hy>=0.18.0,<0.19.0',
  'python-dateutil>=2.8.1,<3.0.0',
  'xdg>=4.0.1,<5.0.0',
  'xtract>=0.1a3,<0.2']
 
 setup_kwargs = {
     'name': 'ghdl',
-    'version': '0.1.0',
+    'version': '0.1.1',
     'description': 'Download and keep binaries from Github releases updated',
     'long_description': None,
     'author': 'Imran Khan',

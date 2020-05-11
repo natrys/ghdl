@@ -24,6 +24,14 @@ version = "0.4.3"
 
 [[package]]
 category = "main"
+description = "Infer file type and MIME type of any file/buffer. No external dependencies."
+name = "filetype"
+optional = false
+python-versions = "*"
+version = "1.0.7"
+
+[[package]]
+category = "main"
 description = "Recursive descent parsing library based on functional combinators"
 name = "funcparserlib"
 optional = false
@@ -102,7 +110,7 @@ version = "0.1a3"
 python-magic = "*"
 
 [metadata]
-content-hash = "668d83872b300be454395d348a665dc98107a54c0ca45bbfc7b27f9ee4704f4c"
+content-hash = "72d45c2a09f3cc9f8aa54e6c1a0f7c7d5b8a6c6cf80f7b53a3f2060600674e2b"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -117,6 +125,10 @@ astor = [
 colorama = [
     {file = "colorama-0.4.3-py2.py3-none-any.whl", hash = "sha256:7d73d2a99753107a36ac6b455ee49046802e59d9d076ef8e47b61499fa29afff"},
     {file = "colorama-0.4.3.tar.gz", hash = "sha256:e96da0d330793e2cb9485e9ddfd918d456036c7149416295932478192f4436a1"},
+]
+filetype = [
+    {file = "filetype-1.0.7-py2.py3-none-any.whl", hash = "sha256:353369948bb1c09b8b3ea3d78390b5586e9399bff9aab894a1dff954e31a66f6"},
+    {file = "filetype-1.0.7.tar.gz", hash = "sha256:da393ece8d98b47edf2dd5a85a2c8733e44b769e32c71af4cd96ed8d38d96aa7"},
 ]
 funcparserlib = [
     {file = "funcparserlib-0.3.6.tar.gz", hash = "sha256:b7992eac1a3eb97b3d91faa342bfda0729e990bd8a43774c1592c091e563c91d"},

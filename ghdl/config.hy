@@ -12,13 +12,13 @@
 
 (setv Config (schema.Config))
 (defn config [&kwargs conf]
-  (if (in "token" conf)
-      (setv Config.token (get conf "token"))
-      (setv Config.token.sleep 0))
+  (when (in "token" conf)
+    (setv Config.token (get conf "token"))
+    (setv Config.sleep 0))
 
-  (if (in "location" conf)
-      (setv Config.location
-            (os.path.expanduser (get conf "location"))))
+  (when (in "location" conf)
+    (setv Config.location
+          (os.path.expanduser (get conf "location"))))
   (utils.make-dir Config.location))
 
 
@@ -28,19 +28,18 @@
   (setv record.repo reponame)
   
   (if (not (in "bin" info))
-      (setv record.bin
+      (setv record.name
             (-> record.repo (.split "/") (get 1)))
-      (setv record.bin (get info "bin")))
+      (setv record.name (get info "name")))
 
   (setv record.url-filter (get info "url_filter"))
 
   (if (in "archive" info)
       (setv record.isArchive? (get info "archive")))
 
-  (if record.isArchive?
-      (if (in "bin_glob" info)
-          (setv record.bin-glob (get info "bin_glob"))
-          (do (print f"Provide 'bin-glob' for {record.repo}") (sys.exit))))
+  (if (in "basename_glob" info)
+      (setv record.basename-glob (get info "basename_glob"))
+      (setv record.basename-glob record.name))
   
   (-> packages (.append record)))
 
