@@ -13,7 +13,8 @@
 (setv Config (schema.Config))
 (defn config [&kwargs conf]
   (if (in "token" conf)
-      (setv Config.token (get conf "token")))
+      (setv Config.token (get conf "token"))
+      (setv Config.token.sleep 0))
 
   (if (in "location" conf)
       (setv Config.location

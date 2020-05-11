@@ -52,7 +52,7 @@
   (for [record records]
     (add-remote-metadata record)
     ;; rate limiting can't hurt
-    (time.sleep 1)
+    (time.sleep config.Config.sleep)
     (add-local-metadata record)
     (record.pretty)))
 

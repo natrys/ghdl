@@ -3,6 +3,7 @@
 (defclass Config []
   (defn __init__ [self]
     (setv self.token None
+          self.sleep 1
           self.location (os.path.expanduser "~/.local/bin/"))))
 
 
