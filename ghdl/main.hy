@@ -1,7 +1,10 @@
 (import xtract)
 
 (import os glob re shutil traceback time)
-(import config remote local utils)
+(import [ghdl.config :as config]
+        [ghdl.remote :as remote]
+        [ghdl.local :as local]
+        [ghdl.utils :as utils])
 
 (setv records config.packages)
 (setv local-metadata (local.LocalRecord))
@@ -15,40 +18,42 @@
   
   (if (isinstance url-filter str)
       (do
-        (setv pattern (re.compile url-filter))
+        (setv pattern (re.compile url-filter re.IGNORECASE))
         (run-filter (fn [name] (bool (re.search pattern name)))))
       (run-filter url-filter)))
 
 
-(defn add-remote-metadata [records]
+(defn add-remote-metadata [record]
+  (setv remote-metadata (remote.metadata record.repo config.Config.token))
+
+  ;; Network error
+  (if (not remote-metadata) (do (setv record.toUpdate? False) (return)))
+
+  (setv dl-url (url-select record.url-filter remote-metadata.url_data))
+  (if dl-url
+      (setv record.url dl-url)
+      ;; User filter couldn't find any candidate
+      (do (setv record.toUpdate? False) (return)))
+
+  (setv record.tag remote-metadata.tag)
+  (setv record.timestamp remote-metadata.timestamp))
+
+
+(defn add-local-metadata [record]
+  (setv local (local-metadata.fetch-row record.repo))
+  (when local
+    (setv record.exists? True)
+                                ;(print f"{local.repo} {local.timestamp} | {record.repo} {record.timestamp}")
+    (if (<= record.timestamp local.timestamp)
+        (setv record.toUpdate? False))))
+
+
+(defn fetch-remote-local-metadata [records]
   (for [record records]
-    (setv remote-metadata (remote.metadata record.repo config.Config.token))
-
-    ;; Network error
-    (if (not remote-metadata) (do (setv record.toUpdate? False) (continue)))
-
-    (setv dl-url (url-select record.url-filter remote-metadata.url_data))
-    (if dl-url
-        (setv record.url dl-url)
-        ;; User filter couldn't find any candidate
-        (do (setv record.toUpdate? False) (continue)))
-
-    (setv record.tag remote-metadata.tag)
-    (setv record.timestamp remote-metadata.timestamp)))
-
-
-(defn add-local-metadata [records]
-  (for [record records]
-    (setv local (local-metadata.fetch-row record.repo))
-    (when local
-      (setv record.exists? True)
-      ;(print f"{local.repo} {local.timestamp} | {record.repo} {record.timestamp}")
-      (if (<= record.timestamp local.timestamp)
-          (setv record.toUpdate? False)))))
-
-
-(defn show-records [records]
-  (for [record records]
+    (add-remote-metadata record)
+    ;; rate limiting can't hurt
+    (time.sleep 1)
+    (add-local-metadata record)
     (record.pretty)))
 
 
@@ -59,9 +64,7 @@
         (process record)
         (except [e []]
           (print f"Failed to process {record.repo}")
-          (print (traceback.format_exc)))))
-    ;; rate reduction can't hurt
-    (time.sleep 1)))
+          (print (traceback.format_exc)))))))
 
 
 (defn process [record]
@@ -87,11 +90,6 @@
 
 
 (defn main []
-  (add-remote-metadata records)
-  (add-local-metadata records)
-  (show-records records)
-  (process-loop records))
-
-
-(main)
-(local-metadata.finalise)
+  (fetch-remote-local-metadata records)
+  (process-loop records)
+  (local-metadata.finalise))

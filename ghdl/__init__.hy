@@ -1,0 +1,1 @@
+(import [ghdl.main [main]])

@@ -1,4 +1,4 @@
-(import sqlite3 pathlib utils)
+(import sqlite3 pathlib [ghdl.utils :as utils])
 (import [xdg [XDG_DATA_HOME]])
 
 
@@ -18,9 +18,11 @@
     CREATE TABLE IF NOT EXISTS records (
         repo text NOT NULL UNIQUE,
         timestamp integer NOT NULL
-    );")
+    );
+
+    CREATE UNIQUE INDEX IF NOT EXISTS record_index ON records (repo) ;")
     (with [con self.connection]
-      (con.execute command)))
+      (con.executescript command)))
 
   (defn fetch-row [self repo]
     (setv command "SELECT * FROM records WHERE repo = ? ;")

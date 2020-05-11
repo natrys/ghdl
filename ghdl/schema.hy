@@ -1,7 +1,9 @@
+(import os)
+
 (defclass Config []
   (defn __init__ [self]
     (setv self.token None
-          self.location "~/.local/bin/")))
+          self.location (os.path.expanduser "~/.local/bin/"))))
 
 
 (defclass Record []

@@ -6,29 +6,29 @@
 (import [xdg [XDG_CONFIG_HOME]] pathlib)
 (setv config-file (/ XDG_CONFIG_HOME (pathlib.Path "ghdl/config")))
 
-(import schema utils)
+(import [ghdl.schema :as schema]
+        [ghdl.utils :as utils])
 
 
 (setv Config (schema.Config))
 (defn config [&kwargs conf]
   (if (in "token" conf)
       (setv Config.token (get conf "token")))
-  (setv Config.location
-        (os.path.expanduser
-          (if (in "location" conf)
-              (get conf "location")
-              Config.location)))
+
+  (if (in "location" conf)
+      (setv Config.location
+            (os.path.expanduser (get conf "location"))))
   (utils.make-dir Config.location))
 
 
-(defn repo [name &kwargs info]
+(defn repo [reponame &kwargs info]
   (setv record (schema.Record))
-  (setv name (.strip name "/"))
-  (setv record.repo name)
+  (setv reponame (-> reponame (.strip "/") (.lower)))
+  (setv record.repo reponame)
   
   (if (not (in "bin" info))
       (setv record.bin
-            (-> name (.split "/") (get 1)))
+            (-> record.repo (.split "/") (get 1)))
       (setv record.bin (get info "bin")))
 
   (setv record.url-filter (get info "url_filter"))
