@@ -75,7 +75,7 @@
       (xtract.xtract filename :all True)
       (os.remove filename)
       (setv filename
-            (get (glob.glob f"**/{record.basename-glob}" :recursive True) 0)))
+            (get (glob.glob f"*/**/{record.basename-glob}" :recursive True) 0)))
 
     (shutil.move filename record.name)
     (utils.make-executable record.name)
