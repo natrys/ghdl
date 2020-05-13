@@ -5,7 +5,7 @@ clean() {
 }
 
 setup() {
-  sed -E "/^version = /s/\".*\"/$(grep -o -P '__version__ \K.*\"' ghdl/__init__.hy)/" pyproject.toml
+  sed -i -E "/^version = /s/\".*\"/$(grep -o -P '__version__ \K.*\"' ghdl/__init__.hy)/" pyproject.toml
   # Since poetry doesn't support non-python scripts
   # https://github.com/python-poetry/poetry/pull/1504
   poetry build
