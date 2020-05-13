@@ -5,6 +5,7 @@
     (setv self.token None
           self.sleep 1
           self.dry-run False
+          self.single None
           self.location (os.path.expanduser "~/.local/bin/"))))
 
 

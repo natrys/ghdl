@@ -5,7 +5,7 @@
 Usage:
   ghdl
   ghdl [--dry-run]
-  ghdl (--delete-local=<repo>)
+  ghdl (-f <repo> | --force <repo>)
   ghdl (-h | --help)
   ghdl (-v | --version)
 
@@ -13,8 +13,7 @@ Options:
   -h --help               Show this screen.
   -v --version            Show version.
   -n --dry-run            Don't download, just show plan.
-  --delete-local=<repo>   Delete repo from local database.
-
+  -f repo --force=repo    Force update a single repo.
 "
 
 (import [docopt [docopt]])
@@ -23,5 +22,5 @@ Options:
 (when (= __name__ "__main__")
     (setv args (docopt __doc__ :version ghdl.__version__))
     (when (get args "--dry-run") (ghdl.set-dry))
-    (if (setx repo (get args "--delete-local")) (ghdl.delete-local repo)
-        (ghdl.main)))
+    (when (setx repo (get args "--force")) (ghdl.set-single repo))
+    (ghdl.main))
