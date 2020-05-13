@@ -1,6 +1,6 @@
 (import filetype xtract)
 
-(import os glob re shutil traceback time)
+(import os fnmatch re shutil traceback sys time)
 (import [ghdl.config :as config]
         [ghdl.remote :as remote]
         [ghdl.local :as local]
@@ -8,6 +8,14 @@
 
 (setv records config.packages)
 (setv local-metadata (local.LocalRecord))
+
+
+(defn file-select [glob]
+  (for [[root dir files] (os.walk ".")]
+    (for [file files]
+      (setv fullpath (os.path.join root file))
+      (when (fnmatch.fnmatch file glob)
+        (return fullpath)))))
 
 
 (defn url-select [url-filter url_data]
@@ -74,11 +82,12 @@
     (when (and record.isArchive? (filetype.archive-match filename))
       (xtract.xtract filename :all True)
       (os.remove filename)
-      (setv filename
-            (get (glob.glob f"*/**/{record.basename-glob}" :recursive True) 0)))
+      (setv filename (file-select record.basename-glob)))
 
     (shutil.move filename record.name)
     (utils.make-executable record.name)
+    (when record.strip? (os.system f"strip {record.name}"))
+
     (setv destination (os.path.join config.Config.location record.name))
     (shutil.move record.name destination)
     (if record.exists?
@@ -86,7 +95,17 @@
         (local-metadata.add-row record.repo record.timestamp))))
 
 
+(defn delete-local [repo]
+  (local-metadata.delete-row repo)
+  (local-metadata.finalise))
+
+
+(defn set-dry []
+  (setv config.Config.dry-run True))
+
+
 (defn main []
   (fetch-remote-local-metadata records)
+  (if config.Config.dry-run (sys.exit))
   (process-loop records)
   (local-metadata.finalise))

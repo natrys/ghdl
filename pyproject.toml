@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ghdl"
-version = "0.1.1"
+version = "0.1.2"
 description = "Download and keep binaries from Github releases updated"
 authors = ["Imran Khan <imrankhan@teknik.io>"]
 license = "AGPL-3.0-or-later"
@@ -12,6 +12,7 @@ xdg = "^4.0.1"
 xtract = "^0.1a3"
 python-dateutil = "^2.8.1"
 filetype = "^1.0.7"
+docopt = "^0.6.2"
 
 [tool.poetry.dev-dependencies]
 

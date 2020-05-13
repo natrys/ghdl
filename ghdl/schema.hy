@@ -4,6 +4,7 @@
   (defn __init__ [self]
     (setv self.token None
           self.sleep 1
+          self.dry-run False
           self.location (os.path.expanduser "~/.local/bin/"))))
 
 
@@ -11,6 +12,7 @@
   (defn __init__ [self]
     (setv self.toUpdate? True
           self.exists? False
+          self.strip? True
           self.isArchive? True))
 
   (defn pretty [self]

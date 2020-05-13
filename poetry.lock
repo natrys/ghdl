@@ -24,6 +24,14 @@ version = "0.4.3"
 
 [[package]]
 category = "main"
+description = "Pythonic argument parser, that will make you smile"
+name = "docopt"
+optional = false
+python-versions = "*"
+version = "0.6.2"
+
+[[package]]
+category = "main"
 description = "Infer file type and MIME type of any file/buffer. No external dependencies."
 name = "filetype"
 optional = false
@@ -110,7 +118,7 @@ version = "0.1a3"
 python-magic = "*"
 
 [metadata]
-content-hash = "72d45c2a09f3cc9f8aa54e6c1a0f7c7d5b8a6c6cf80f7b53a3f2060600674e2b"
+content-hash = "6dcc396dc675d836bf8296cd2d1c0d0d52d162c05c881634092a77b92ef6dbf2"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -125,6 +133,9 @@ astor = [
 colorama = [
     {file = "colorama-0.4.3-py2.py3-none-any.whl", hash = "sha256:7d73d2a99753107a36ac6b455ee49046802e59d9d076ef8e47b61499fa29afff"},
     {file = "colorama-0.4.3.tar.gz", hash = "sha256:e96da0d330793e2cb9485e9ddfd918d456036c7149416295932478192f4436a1"},
+]
+docopt = [
+    {file = "docopt-0.6.2.tar.gz", hash = "sha256:49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491"},
 ]
 filetype = [
     {file = "filetype-1.0.7-py2.py3-none-any.whl", hash = "sha256:353369948bb1c09b8b3ea3d78390b5586e9399bff9aab894a1dff954e31a66f6"},
