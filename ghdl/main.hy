@@ -18,17 +18,17 @@
         (return fullpath)))))
 
 
-(defn url-select [url-filter url_data]
+(defn url-select [asset-filter url_data]
   (defn run-filter [f]
-    (for [[name url] url_data]
-      (if (f name)
+    (for [[asset url] url_data]
+      (if (f asset)
           (return url))))
   
-  (if (isinstance url-filter str)
+  (if (isinstance asset-filter str)
       (do
-        (setv pattern (re.compile url-filter re.IGNORECASE))
+        (setv pattern (re.compile asset-filter re.IGNORECASE))
         (run-filter (fn [name] (bool (re.search pattern name)))))
-      (run-filter url-filter)))
+      (run-filter asset-filter)))
 
 
 (defn add-remote-metadata [record]
@@ -37,7 +37,7 @@
   ;; Network error
   (if (not remote-metadata) (do (setv record.toUpdate? False) (return)))
 
-  (setv dl-url (url-select record.url-filter remote-metadata.url_data))
+  (setv dl-url (url-select record.asset-filter remote-metadata.url_data))
   (if dl-url
       (setv record.url dl-url)
       ;; User filter couldn't find any candidate
@@ -109,7 +109,7 @@
 
 
 (defn set-single [repo]
-  (local-metadata.delete-row repo)
+  (local-db.delete-row repo)
   (setv config.Config.single repo))
 
 

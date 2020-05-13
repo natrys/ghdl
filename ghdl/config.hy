@@ -26,13 +26,13 @@
   (setv record (schema.Record))
   (setv reponame (-> reponame (.strip "/") (.lower)))
   (setv record.repo reponame)
-  
+
+  (setv record.asset-filter (get info "asset_filter"))
+
   (if (not (in "bin" info))
       (setv record.name
             (-> record.repo (.split "/") (get 1)))
       (setv record.name (get info "name")))
-
-  (setv record.url-filter (get info "url_filter"))
 
   (if (in "archive" info)
       (setv record.isArchive? (get info "archive")))

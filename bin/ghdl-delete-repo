@@ -1,0 +1,3 @@
+#!/bin/sh
+
+sqlite3 ~/.local/share/ghdl/db "DELETE FROM records WHERE repo = '$1' ;" '.exit'
