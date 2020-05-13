@@ -55,8 +55,15 @@
         (setv record.toUpdate? False))))
 
 
+(defn check-single [repo]
+  (as-> config.Config.single it
+    (and it (!= repo it))))
+
+
 (defn fetch-remote-local-metadata [records]
   (for [record records]
+    (when (check-single record.repo) (continue))
+
     (add-remote-metadata record)
     ;; rate limiting can't hurt
     (time.sleep config.Config.sleep)
@@ -66,6 +73,8 @@
 
 (defn process-loop [records]
   (for [record records]
+    (when (check-single record.repo) (continue))
+
     (when record.toUpdate?
       (try
         (process record)
@@ -95,13 +104,13 @@
         (local-db.add-row record.repo record.timestamp))))
 
 
-(defn delete-local [repo]
-  (local-db.delete-row repo)
-  (local-db.finalise))
-
-
 (defn set-dry []
   (setv config.Config.dry-run True))
+
+
+(defn set-single [repo]
+  (local-metadata.delete-row repo)
+  (setv config.Config.single repo))
 
 
 (defn main []
