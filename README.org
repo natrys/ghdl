@@ -29,7 +29,7 @@ The config file is simple, and is to be provided at =~/.config/ghdl/config=. It 
 
 And when you run ghdl, it will download crun static binary and place it in =~/.local/bin/= (by default). And next time you run ghdl, it won't be downloaded again, unless upstream released new version.
 
-**** All Options
+**** Options
 
 These are the options you can specify:
 
@@ -124,5 +124,5 @@ I tried not to trip abuse detector (no async/rate limit etc.) but you should use
 
 - Pre-release is not considered
 - Some programs use same repo to release different parts of project (e.g. dnote does it for server and cli), ghdl only looks at the last release and can't differentiate between them
-- Windows doesn't work (so much for cross-platform), although fix should be simple; I just don't know various xdg path equivalents in it (however one needs to have tar, gzip etc. in the path path which means the likes of msys2, git bash, WSL or whatever, and in those it just might work ootb)
+- Windows doesn't work (so much for cross-platform), although fix should be simple; I just don't know various xdg path equivalents in it (however one needs to have tar, gzip etc. in the path which means the likes of msys2, git bash, WSL or whatever, and in those it just might work ootb)
 - Downloads from github is excessively slow in most parts of the world, nothing I can do about that apart from perhaps switching to an external downloader (like aria2) from current pure python one
