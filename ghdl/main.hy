@@ -7,7 +7,7 @@
         [ghdl.utils :as utils])
 
 (setv records config.packages)
-(setv local-metadata (local.LocalRecord))
+(setv local-db (local.LocalRecord))
 
 
 (defn file-select [glob]
@@ -48,7 +48,7 @@
 
 
 (defn add-local-metadata [record]
-  (setv local (local-metadata.fetch-row record.repo))
+  (setv local (local-db.fetch-row record.repo))
   (when local
     (setv record.exists? True)
     (if (<= record.timestamp local.timestamp)
@@ -91,13 +91,13 @@
     (setv destination (os.path.join config.Config.location record.name))
     (shutil.move record.name destination)
     (if record.exists?
-        (local-metadata.update-row record.repo record.timestamp)
-        (local-metadata.add-row record.repo record.timestamp))))
+        (local-db.update-row record.repo record.timestamp)
+        (local-db.add-row record.repo record.timestamp))))
 
 
 (defn delete-local [repo]
-  (local-metadata.delete-row repo)
-  (local-metadata.finalise))
+  (local-db.delete-row repo)
+  (local-db.finalise))
 
 
 (defn set-dry []
@@ -106,6 +106,5 @@
 
 (defn main []
   (fetch-remote-local-metadata records)
-  (if config.Config.dry-run (sys.exit))
-  (process-loop records)
-  (local-metadata.finalise))
+  (unless config.Config.dry-run (process-loop records))
+  (local-db.finalise))

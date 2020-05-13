@@ -4,8 +4,8 @@
 
 Usage:
   ghdl
-  ghdl [--dry-run]
   ghdl (--delete-local=<repo>)
+  ghdl [-n | --dry-run]
   ghdl (-h | --help)
   ghdl (-v | --version)
 
