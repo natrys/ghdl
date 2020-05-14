@@ -37,6 +37,9 @@
   (if (in "archive" info)
       (setv record.isArchive? (get info "archive")))
 
+  (if (in "prerelease" info)
+      (setv record.pre-release? (get info "prerelease")))
+
   (if (in "basename_glob" info)
       (setv record.basename-glob (get info "basename_glob"))
       (setv record.basename-glob f"*{record.name}*"))

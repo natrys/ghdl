@@ -14,6 +14,7 @@
     (setv self.toUpdate? True
           self.exists? False
           self.strip? True
+          self.pre-release? False
           self.isArchive? True))
 
   (defn pretty [self]

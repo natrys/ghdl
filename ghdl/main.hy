@@ -7,6 +7,7 @@
         [ghdl.utils :as utils])
 
 (setv records config.packages)
+(setv Config config.Config)
 (setv local-db (local.LocalRecord))
 
 
@@ -34,7 +35,8 @@
 
 
 (defn add-remote-metadata [record]
-  (setv remote-metadata (remote.metadata record.repo config.Config.token))
+  (setv remote-metadata
+        (remote.metadata record.repo record.pre-release? Config.token))
 
   ;; Network error
   (if (not remote-metadata) (do (setv record.toUpdate? False) (return)))
@@ -58,7 +60,7 @@
 
 
 (defn check-single [repo]
-  (as-> config.Config.single it
+  (as-> Config.single it
     (and it (!= repo it))))
 
 
@@ -68,7 +70,7 @@
 
     (add-remote-metadata record)
     ;; rate limiting can't hurt
-    (time.sleep config.Config.sleep)
+    (time.sleep Config.sleep)
     (add-local-metadata record)
     (record.pretty)))
 
@@ -99,7 +101,7 @@
     (utils.make-executable record.name)
     (when record.strip? (os.system f"strip {record.name}"))
 
-    (setv destination (os.path.join config.Config.location record.name))
+    (setv destination (os.path.join Config.location record.name))
     (shutil.move record.name destination)
     (if record.exists?
         (local-db.update-row record.repo record.timestamp)
@@ -107,15 +109,15 @@
 
 
 (defn set-dry []
-  (setv config.Config.dry-run True))
+  (setv Config.dry-run True))
 
 
 (defn set-single [repo]
   (local-db.delete-row repo)
-  (setv config.Config.single repo))
+  (setv Config.single repo))
 
 
 (defn main []
   (fetch-remote-local-metadata records)
-  (unless config.Config.dry-run (process-loop records))
+  (unless Config.dry-run (process-loop records))
   (local-db.finalise))
