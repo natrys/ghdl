@@ -17,7 +17,7 @@ install_requires = \
 
 setup_kwargs = {
     'name': 'ghdl',
-    'version': '0.2.0',
+    'version': '0.2.1',
     'description': 'Download and keep binaries from Github releases updated',
     'long_description': None,
     'author': 'Imran Khan',

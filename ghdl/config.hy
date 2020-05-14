@@ -29,7 +29,7 @@
 
   (setv record.asset-filter (get info "asset_filter"))
 
-  (if (not (in "bin" info))
+  (if (not (in "name" info))
       (setv record.name
             (-> record.repo (.split "/") (get 1)))
       (setv record.name (get info "name")))
