@@ -1,6 +1,6 @@
-(import filetype xtract)
+(import filetype xtract magic)
 
-(import os fnmatch re shutil traceback sys time)
+(import [fnmatch [fnmatch]] os re shutil traceback sys time)
 (import [ghdl.config :as config]
         [ghdl.remote :as remote]
         [ghdl.local :as local]
@@ -14,7 +14,9 @@
   (for [[root dir files] (os.walk ".")]
     (for [file files]
       (setv fullpath (os.path.join root file))
-      (when (fnmatch.fnmatch file glob)
+      (setv isApp?
+        (fnmatch (magic.from-file fullpath :mime True) "application/*"))
+      (when (and (fnmatch file glob) isApp?)
         (return fullpath)))))
 
 

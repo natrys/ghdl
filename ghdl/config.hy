@@ -39,7 +39,7 @@
 
   (if (in "basename_glob" info)
       (setv record.basename-glob (get info "basename_glob"))
-      (setv record.basename-glob record.name))
+      (setv record.basename-glob f"*{record.name}*"))
 
   (if (in "strip" info)
       (setv record.strip? (get info "strip")))
