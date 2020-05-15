@@ -1,6 +1,6 @@
 *** GHDL
 
-Download and keep binaries from Github Releases updated.
+Download and keep binaries from Github Releases updated across machines with minimal intervention.
 
 *** Install
 
@@ -8,15 +8,15 @@ Download and keep binaries from Github Releases updated.
 pip install ghdl
 #+end_src
 
-Additionally you need to have sqlite and archive tools like tar, gzip etc. installed.
+Additionally you need to have sqlite, libmagic and tools pertaining to archive like tar, gzip, unzip etc. installed.
 
 *** About
 
-The advent of technologies like Rust/Golang/Nim, musl libc, better CI/CD workflow etc. mean that many projects are doing multi platform/arch (static) binary releases at github. While distro provided package that correctly links with necessary system libs remains the best choice, sometimes i) the program isn't packaged for your distro ii) you hop between many machines/distros anyway.
+The advent of technologies like Rust/Golang/Nim, musl libc, better CI/CD workflow etc. mean that many projects are doing multi platform/arch (static) binary releases at github. While distro provided packages that correctly link with necessary system libs remains the best choice, sometimes i) the program isn’t packaged for your distro ii) you hop between many machines/distros anyway.
 
-Assuming this hadn't been done, unless you are willing to i) package it for every distro you use or for distro agnostic systems like docker, nix/guix ii) and then take on the burden of maintaining it for others, or setup private repo iii) and then track releases and actually rebuild/update it, downloading stuffs from github might actually be more convenient (I mean I hope this isn't false dichotomy, but what are other options? snap/flatpack for a CLI program feels wrong to me, appimage is okay but lacks traction and I don't have very high regard for average quality of an AUR package, still we all should switch to [[https://bedrocklinux.org/][Bedrock Linux]]), but anyway I digress.
+Assuming this hadn’t been done, unless you are willing to i) package it for every distro you use or package it for distro agnostic systems like Docker, Nix/Guix ii) and then take on the burden of maintaining it for others, or setup private repo iii) and then track releases and actually rebuild/update it, downloading stuffs from github might actually be more convenient (I mean I hope this isn’t false dichotomy, but what are other options? snap/flatpack for a CLI program feels wrong to me, appimage is okay but lacks traction and I don’t have very high regard for average quality of an AUR package, maybe we should all switch to [[https://bedrocklinux.org/][Bedrock Linux]]), but anyway I digress.
 
-The manual interventions necessary to periodically check and download from github could be automated, so that's what I will stick with for now. With this, you can carry just a config file around, maybe even hook it upto a cron and forget.
+The manual interventions necessary to periodically check and download from github could be automated. This program allows you to declaratively describe the packages you use in a config file which you can then just carry around, perhaps even hook up to a cron and forget.
 
 *** Config
 
@@ -24,10 +24,10 @@ The config file is simple, and is to be provided at =~/.config/ghdl/config=. It 
 
 #+begin_src conf
 (repo "containers/crun"
-  :url-filter "static")
+  :asset-filter "static")
 #+end_src
 
-And when you run ghdl, it will download crun static binary and place it in =~/.local/bin/= (by default). And next time you run ghdl, it won't be downloaded again, unless upstream released new version.
+And when you run ghdl, it will download crun static binary and place it in =~/.local/bin/= (by default). And next time you run ghdl it won't be downloaded again, unless upstream released new version in-between.
 
 **** Options
 
@@ -41,21 +41,30 @@ Name of the binary to save as, optional. Default is to infer it from repo name, 
 
 A regular expression that can uniquely identify an asset from a list of them, required. Matching is done case-insensitively.
 
-***** =:filename-glob= 
+***** =:basename-glob= 
 
-Most of the time asset is an archive, ghdl automatically extracts it, but needs to know which file to select (usually there are multiple). Note that the glob needs to describe just the basename, and the default is to use =:name= which usually works, e.g.:
+Most of the time asset is an archive, ghdl automatically extracts it, but needs to know which file to select (usually there are multiple). Note that the glob needs to describe just the basename, and the default is to use "=*{:name}*=" which usually works. The fact that it's further ensured with libmagic that the file actually has mime-type "application/*" means I never had to set =:basename-glob= explicity. For example, below you could omit it because the binary is named "devd" which is matched by the glob "\ast{}devd\ast{}" anyway:
 
 #+begin_src conf
 (repo "cortesi/devd"
-  :asset-filter "linux64")
+  :asset-filter "linux64"
+  :basename-glob "devd") ;; Not necessary
 #+end_src
 
-Here you didn't need to set =:filename-glob= even though the asset is an archive. Because the binary inside the archive is named "devd" anyway. But elsewhere you might need to, e.g.
+And in the following case, again the binary name "kompose-linux-amd64" is already covered by glob "\ast{}kompose\ast{}":
 
 #+begin_src conf
 (repo "kubernetes/kompose"
   :url-filter "linux-amd64.*gz$"
-  :basename-glob "kompose*")
+  :basename-glob "kompose*") ;; Not necessary
+#+end_src
+
+Sometimes the default is too broad. For example, in case of repo "=github/hub=" the binary is named just "hub" which isn't a problem, but the glob "\ast{}hub\ast{}" matches not just the binary but some other doc file too. Except that's where libmagic comes in and filters out all non-application mimetypes.
+
+#+begin_src conf
+(repo "github/hub"
+  :asset-filter "linux-amd64"
+  :basename-glob "hub") ;; Not necessary
 #+end_src
 
 ***** =:strip=
@@ -68,7 +77,18 @@ Whether to strip the downloaded binary or not, default is True. But you may need
   :strip False)
 #+end_src
 
-Stripping doesn't have any effect for statically linked binaries. But can reduce the size of Golang stuffs considerably. Although, apparently some distros turn off stripping for Golang because otherwise the binaries behave strangely. Until I can verify that, I am keeping this True by default.
+Stripping can reduce the size of binaries considerably (here the /bin/strip is invoked without argument), but this isn't without trade-off. Apparently some distros turn off stripping for Golang because otherwise the binaries behave strangely. Until I can verify that, I am keeping this True by default.
+
+***** =:prerelease:=
+
+You can also choose to live in the edge, some packages for some reason choose to release as pre-release only anyway (so far).
+
+#+begin_src conf
+(repo "borkdude/babashka"
+  :name "bb"
+  :asset-filter "static"
+  :prerelease True)
+#+end_src
 
 **** Advanced Configuration
 
@@ -78,10 +98,10 @@ The goal is to eventually define something that hopefully can continue to work c
 (setv my-os (platform.system)
       my-arch (platform.machine))
 
-(when (= my-arch "x86_64") ;; etc
+(if (= my-arch "x86_64")
     (setv arch-pattern "(x86[-_]64|amd64)"))
 
-(setv os-arch f"{my-os}[-_]{arch-pattern}")
+(setv os-arch f"{my-os}[-_.]{arch-pattern}")
 
 (repo "caddyserver/caddy"
   :asset-filter f"{os-arch}.*gz")
@@ -122,7 +142,6 @@ I tried not to trip abuse detector (no async/rate limit etc.) but you should use
 
 *** TODO/Limitation/Ideas
 
-- Pre-release is not considered
 - Some programs use same repo to release different parts of project (e.g. dnote does it for server and cli), ghdl only looks at the last release and can't differentiate between them
-- Windows doesn't work (so much for cross-platform), although fix should be simple; I just don't know various xdg path equivalents in it (however one needs to have tar, gzip etc. in the path which means the likes of msys2, git bash, WSL or whatever, and in those it just might work ootb)
+- Windows/MacOS doesn't work yet (so much for cross-platform), although fix should be simple; I just don't know various xdg path equivalents in it (however one needs to have tar, gzip etc. in the path which means the likes of msys2, git bash, WSL or whatever, and in those it just might work ootb)
 - Downloads from github is excessively slow in most parts of the world, nothing I can do about that apart from perhaps switching to an external downloader (like aria2) from current pure python one
