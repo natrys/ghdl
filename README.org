@@ -12,11 +12,7 @@ Additionally you need to have sqlite, libmagic and tools pertaining to archive l
 
 *** About
 
-The advent of technologies like Rust/Golang/Nim, musl libc, better CI/CD workflow etc. mean that many projects are doing multi platform/arch (static) binary releases at github. While distro provided packages that correctly link with necessary system libs remains the best choice, sometimes i) the program isn’t packaged for your distro ii) you hop between many machines/distros anyway.
-
-Assuming this hadn’t been done, unless you are willing to i) package it for every distro you use or package it for distro agnostic systems like Docker, Nix/Guix ii) and then take on the burden of maintaining it for others, or setup private repo iii) and then track releases and actually rebuild/update it, downloading stuffs from github might actually be more convenient (I mean I hope this isn’t false dichotomy, but what are other options? snap/flatpack for a CLI program feels wrong to me, appimage is okay but lacks traction and I don’t have very high regard for average quality of an AUR package, maybe we should all switch to [[https://bedrocklinux.org/][Bedrock Linux]]), but anyway I digress.
-
-The manual interventions necessary to periodically check and download from github could be automated. This program allows you to declaratively describe the packages you use in a config file which you can then just carry around, perhaps even hook up to a cron and forget.
+More and more projects are doing multi platform/arch binary releases at github these days. While distro provided packages remain the best idea, they are not a portable/zero-maintenance solution. When you hop between machines running on different hardware/OS/architecture, it's convenient to just download said binaries. Except doing it manually is tedious. With this tool you can automate it by encapsulating the logic in a config file which you can then carry aroud, maybe even hook up to a cron and forget.
 
 *** Config
 
@@ -79,7 +75,7 @@ Whether to strip the downloaded binary or not, default is True. But you may need
 
 Stripping can reduce the size of binaries considerably (here the /bin/strip is invoked without argument), but this isn't without trade-off. Apparently some distros turn off stripping for Golang because otherwise the binaries behave strangely. Until I can verify that, I am keeping this True by default.
 
-***** =:prerelease:=
+***** =:prerelease=
 
 You can also choose to live in the edge, some packages for some reason choose to release as pre-release only anyway (so far).
 

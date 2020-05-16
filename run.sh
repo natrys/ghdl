@@ -19,7 +19,7 @@ release() {
   twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 }
 
-update {
+update() {
   bin/ghdl -f $(grep -Po 'repo \"\K[^"]*' ~/.config/ghdl/config | fzf)
 }
 

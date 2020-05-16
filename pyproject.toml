@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ghdl"
-version = "0.2.1"
+version = "0.2.2"
 description = "Download and keep binaries from Github releases updated"
 authors = ["Imran Khan <imrankhan@teknik.io>"]
 license = "AGPL-3.0-or-later"
