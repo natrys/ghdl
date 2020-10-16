@@ -4,7 +4,7 @@ description = "A small Python module for determining appropriate platform-specif
 name = "appdirs"
 optional = false
 python-versions = "*"
-version = "1.4.3"
+version = "1.4.4"
 
 [[package]]
 category = "main"
@@ -20,7 +20,7 @@ description = "Cross-platform colored terminal text."
 name = "colorama"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-version = "0.4.3"
+version = "0.4.4"
 
 [[package]]
 category = "main"
@@ -52,7 +52,7 @@ description = "Lisp and Python love each other."
 name = "hy"
 optional = false
 python-versions = "*"
-version = "0.18.0"
+version = "0.19.0"
 
 [package.dependencies]
 astor = ">=0.8"
@@ -96,7 +96,7 @@ description = "Python 2 and 3 compatibility utilities"
 name = "six"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
-version = "1.14.0"
+version = "1.15.0"
 
 [[package]]
 category = "main"
@@ -118,21 +118,21 @@ version = "0.1a3"
 python-magic = "*"
 
 [metadata]
-content-hash = "6dcc396dc675d836bf8296cd2d1c0d0d52d162c05c881634092a77b92ef6dbf2"
+content-hash = "9b3332c7c3b5a10ba4105ff978ffa9b5e03a749c06cd49eae7d2b11e03e10bc3"
 python-versions = "^3.8"
 
 [metadata.files]
 appdirs = [
-    {file = "appdirs-1.4.3-py2.py3-none-any.whl", hash = "sha256:d8b24664561d0d34ddfaec54636d502d7cea6e29c3eaf68f3df6180863e2166e"},
-    {file = "appdirs-1.4.3.tar.gz", hash = "sha256:9e5896d1372858f8dd3344faf4e5014d21849c756c8d5701f78f8a103b372d92"},
+    {file = "appdirs-1.4.4-py2.py3-none-any.whl", hash = "sha256:a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128"},
+    {file = "appdirs-1.4.4.tar.gz", hash = "sha256:7d5d0167b2b1ba821647616af46a749d1c653740dd0d2415100fe26e27afdf41"},
 ]
 astor = [
     {file = "astor-0.8.1-py2.py3-none-any.whl", hash = "sha256:070a54e890cefb5b3739d19f30f5a5ec840ffc9c50ffa7d23cc9fc1a38ebbfc5"},
     {file = "astor-0.8.1.tar.gz", hash = "sha256:6a6effda93f4e1ce9f618779b2dd1d9d84f1e32812c23a29b3fff6fd7f63fa5e"},
 ]
 colorama = [
-    {file = "colorama-0.4.3-py2.py3-none-any.whl", hash = "sha256:7d73d2a99753107a36ac6b455ee49046802e59d9d076ef8e47b61499fa29afff"},
-    {file = "colorama-0.4.3.tar.gz", hash = "sha256:e96da0d330793e2cb9485e9ddfd918d456036c7149416295932478192f4436a1"},
+    {file = "colorama-0.4.4-py2.py3-none-any.whl", hash = "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"},
+    {file = "colorama-0.4.4.tar.gz", hash = "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"},
 ]
 docopt = [
     {file = "docopt-0.6.2.tar.gz", hash = "sha256:49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491"},
@@ -145,8 +145,8 @@ funcparserlib = [
     {file = "funcparserlib-0.3.6.tar.gz", hash = "sha256:b7992eac1a3eb97b3d91faa342bfda0729e990bd8a43774c1592c091e563c91d"},
 ]
 hy = [
-    {file = "hy-0.18.0-py2.py3-none-any.whl", hash = "sha256:a21bfef946e958d2672c55acd2fd44161c00ba4c0b6197e9f62ea427a3926679"},
-    {file = "hy-0.18.0.tar.gz", hash = "sha256:42f24caaa7f5b4427929859395c215c8cc6e19807b46feaa0b863f3346e5ae11"},
+    {file = "hy-0.19.0-py2.py3-none-any.whl", hash = "sha256:d2ed54995f05518c8038d06d916cb960e9e56050c4c4426cb11d0ed9650ab2e2"},
+    {file = "hy-0.19.0.tar.gz", hash = "sha256:3a5a1d76ddeb2f1d5de71ad1b1167799850db955b5eb0258e351fb182b2e6016"},
 ]
 python-dateutil = [
     {file = "python-dateutil-2.8.1.tar.gz", hash = "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c"},
@@ -161,8 +161,8 @@ rply = [
     {file = "rply-0.7.7.tar.gz", hash = "sha256:4d6d25703efd28fb3d5707f7b3bd4fe66c306159a5c25af10ba26d206a66d00d"},
 ]
 six = [
-    {file = "six-1.14.0-py2.py3-none-any.whl", hash = "sha256:8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"},
-    {file = "six-1.14.0.tar.gz", hash = "sha256:236bdbdce46e6e6a3d61a337c0f8b763ca1e8717c03b369e87a7ec7ce1319c0a"},
+    {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},
+    {file = "six-1.15.0.tar.gz", hash = "sha256:30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259"},
 ]
 xdg = [
     {file = "xdg-4.0.1-py3-none-any.whl", hash = "sha256:bf9032b027e3061d38c362a21b14dcf057a5b5a4906956f8e8278cefdf73f38b"},

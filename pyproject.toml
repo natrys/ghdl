@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "ghdl"
-version = "0.2.2"
-description = "Download and keep binaries from Github releases updated"
+version = "0.2.3"
+description = "Package manager for Github Release binaries"
 authors = ["Imran Khan <imrankhan@teknik.io>"]
 license = "AGPL-3.0-or-later"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-hy = "^0.18.0"
+hy = "^0.19.0"
 xdg = "^4.0.1"
 xtract = "^0.1a3"
 python-dateutil = "^2.8.1"
