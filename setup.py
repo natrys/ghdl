@@ -17,7 +17,7 @@ install_requires = \
 
 setup_kwargs = {
     'name': 'ghdl',
-    'version': '0.3.0',
+    'version': '0.3.1',
     'description': 'Package manager for self-contained Github release binaries',
     'long_description': None,
     'author': 'Imran Khan',

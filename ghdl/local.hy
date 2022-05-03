@@ -1,5 +1,6 @@
-(import sqlite3 pathlib [ghdl.utils :as utils])
-(import [xdg [XDG_DATA_HOME]])
+(import sqlite3 pathlib)
+(import ghdl.utils :as utils)
+(import xdg [XDG_DATA_HOME])
 
 
 (defclass Record []
@@ -22,7 +23,9 @@
 
     CREATE UNIQUE INDEX IF NOT EXISTS record_index ON records (repo) ;")
     (with [con self.connection]
-      (con.executescript command)))
+      (con.executescript command))
+    
+    (return None))
 
   (defn fetch-row [self repo]
     (setv command "SELECT * FROM records WHERE repo = ? ;")

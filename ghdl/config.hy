@@ -3,15 +3,17 @@
 (import hy hy.importer)
 (import sys os stat re shutil glob platform)
 
-(import [xdg [XDG_CONFIG_HOME]] pathlib)
+(import xdg [XDG_CONFIG_HOME] pathlib)
 (setv config-file (/ XDG_CONFIG_HOME (pathlib.Path "ghdl/config")))
 
-(import [ghdl.schema :as schema]
-        [ghdl.utils :as utils])
+(import ghdl.schema :as schema
+        ghdl.utils :as utils)
+
+(require hyrule [->])
 
 
 (setv Config (schema.Config))
-(defn config [&kwargs conf]
+(defn config [#** conf]
   (when (in "token" conf)
     (setv Config.token (get conf "token"))
     (setv Config.sleep 0))
@@ -22,9 +24,9 @@
   (utils.make-dir Config.location))
 
 
-(defn repo [reponame &kwargs info]
+(defn repo [reponame #** info]
   (setv record (schema.Record))
-  (setv reponame (-> reponame (.strip "/") (.lower)))
+  (setv reponame (-> reponame (.strip "/") (str.lower)))
   (setv record.repo reponame)
 
   (setv record.asset-filter (get info "asset_filter"))

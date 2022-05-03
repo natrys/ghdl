@@ -16,7 +16,7 @@ Options:
   -f repo --force=repo    Force update a single repo.
 "
 
-(import [docopt [docopt]])
+(import docopt [docopt])
 (import ghdl)
 
 (when (= __name__ "__main__")

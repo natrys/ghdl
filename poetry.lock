@@ -53,6 +53,17 @@ funcparserlib = ">=1.0.0a0"
 rply = ">=0.7.7"
 
 [[package]]
+name = "hyrule"
+version = "0.1"
+description = "A utility library for the Hy programming language"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+hy = "1.0a4"
+
+[[package]]
 name = "python-dateutil"
 version = "2.8.2"
 description = "Extensions to the standard Python datetime module"
@@ -112,7 +123,7 @@ python-magic = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.11"
-content-hash = "19f478b15fb998a7123abaaa7444d1eb1d88b7fb30c1ee465d2690887d444578"
+content-hash = "1d11b23981eb089d1b05f31f33183bd06459110f0576f51e0550af27417631c4"
 
 [metadata.files]
 appdirs = [
@@ -137,6 +148,10 @@ funcparserlib = [
 hy = [
     {file = "hy-1.0a4-py3-none-any.whl", hash = "sha256:bc484395b1bf7c900d8239e977ac5bcd377101bf04cb3dabc37fe1737d8ad908"},
     {file = "hy-1.0a4.tar.gz", hash = "sha256:f514e45f1b71127f88ed0f233675698326b85a3bb204a3f9d9afab559bf3efb9"},
+]
+hyrule = [
+    {file = "hyrule-0.1-py3-none-any.whl", hash = "sha256:9626be102a47ddb1cb61c2464560063f094541c7990d82e15ca312dd41385703"},
+    {file = "hyrule-0.1.tar.gz", hash = "sha256:be7e09f285ef74a18f56a1686a87c7281df85e8a8113eceb0b575cdea40e7cd1"},
 ]
 python-dateutil = [
     {file = "python-dateutil-2.8.2.tar.gz", hash = "sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86"},

@@ -1,11 +1,13 @@
 (import xtract)
 (import platform)
 
-(import [fnmatch [fnmatch]] os re shutil traceback sys time)
-(import [ghdl.config :as config]
-        [ghdl.remote :as remote]
-        [ghdl.local :as local]
-        [ghdl.utils :as utils])
+(import fnmatch [fnmatch] os re shutil traceback sys time)
+(import ghdl.config :as config
+        ghdl.remote :as remote
+        ghdl.local :as local
+        ghdl.utils :as utils)
+
+(require hyrule [as-> -> unless])
 
 (setv records config.packages)
 (setv Config config.Config)
