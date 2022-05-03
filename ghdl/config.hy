@@ -46,6 +46,9 @@
 
   (if (in "strip" info)
       (setv record.strip? (get info "strip")))
+
+  (if (in "pin" info)
+      (setv record.pin (get info "pin")))
   
   (-> packages (.append record)))
 

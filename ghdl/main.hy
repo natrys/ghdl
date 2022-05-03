@@ -1,4 +1,5 @@
-(import filetype xtract magic)
+(import xtract)
+(import platform)
 
 (import [fnmatch [fnmatch]] os re shutil traceback sys time)
 (import [ghdl.config :as config]
@@ -15,8 +16,7 @@
   (for [[root dir files] (os.walk ".")]
     (for [file files]
       (setv fullpath (os.path.join root file))
-      (setv isApp?
-        (fnmatch (magic.from-file fullpath :mime True) "application/*"))
+      (setv isApp? (utils.isExecutable? fullpath))
       (when (and (fnmatch file glob) isApp?)
         (return fullpath)))))
 
@@ -39,14 +39,23 @@
         (remote.metadata record.repo record.pre-release? Config.token))
 
   ;; Network error
-  (if (not remote-metadata) (do (setv record.toUpdate? False) (return)))
+  (when (not remote-metadata)
+    (do
+      (setv record.toUpdate? False)
+      (.append Config.failures (, record.repo "Network"))
+      (return)))
 
   (setv dl-url (url-select record.asset-filter remote-metadata.url_data))
-  (if dl-url
-      (setv record.url dl-url)
-      ;; User filter couldn't find any candidate
-      (do (setv record.toUpdate? False) (return)))
 
+  ;; User filter couldn't find any candidate
+  (when (not dl-url)
+      (do
+        (setv record.toUpdate? False)
+        (setv record.url "N/A")
+        (.append Config.failures (, record.repo "No Matching URL"))
+        (return)))
+
+  (setv record.url dl-url)
   (setv record.tag remote-metadata.tag)
   (setv record.timestamp remote-metadata.timestamp))
 
@@ -67,6 +76,7 @@
 (defn fetch-remote-local-metadata [records]
   (for [record records]
     (when (check-single record.repo) (continue))
+    (when (and record.pin (not (= (platform.machine) record.pin))) (continue))
 
     (add-remote-metadata record)
     ;; rate limiting can't hurt
@@ -78,6 +88,7 @@
 (defn process-loop [records]
   (for [record records]
     (when (check-single record.repo) (continue))
+    (when (and record.pin (not (= (platform.machine) record.pin))) (continue))
 
     (when record.toUpdate?
       (try
@@ -92,7 +103,7 @@
     (setv filename (-> record.url (.split "/") (get -1)))
     (utils.download_file record.url filename)
 
-    (when (and record.isArchive? (filetype.archive-match filename))
+    (when (and record.isArchive? (utils.isArchive? filename))
       (xtract.xtract filename :all True)
       (os.remove filename)
       (setv filename (file-select record.basename-glob)))
@@ -120,4 +131,6 @@
 (defn main []
   (fetch-remote-local-metadata records)
   (unless Config.dry-run (process-loop records))
+  (for [(, repo reason) Config.failures]
+    (print f"Failed: https://github.com/{repo} ({reason})"))
   (local-db.finalise))

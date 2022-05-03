@@ -1,4 +1,4 @@
-(import os stat requests shutil tempfile)
+(import os stat requests shutil tempfile magic)
 
 
 (defclass Tempdir []
@@ -31,3 +31,35 @@
 (defn make-executable [filename]
   (setv st (os.stat filename))
   (os.chmod filename (| st.st_mode stat.S_IEXEC)))
+
+
+(setv archive-mime-types #{
+  "application/zip"
+  "application/x-xz"
+  "application/x-tar"
+  "application/x-gzip"
+  "application/x-bzip2"
+  "application/x-lzop"
+  "application/x-lzip"
+  "application/x-lz4"
+  "application/x-compress"
+  "application/x-rar-compressed"
+  "application/x-7z-compressed"
+  "application/x-unix-archive"
+  "application/x-rpm"
+})
+
+(setv executable-mime-types #{
+  "application/elf"
+  "application/x-sharedlib"
+  "application/x-pie-executable"
+  "application/x-executable"
+})
+
+
+(defn isExecutable? [filename]
+  (in (magic.from-file filename :mime True) executable-mime-types))
+
+
+(defn isArchive? [filename]
+  (in (magic.from-file filename :mime True) archive-mime-types))

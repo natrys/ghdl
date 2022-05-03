@@ -1,125 +1,118 @@
 [[package]]
-category = "main"
-description = "A small Python module for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
 name = "appdirs"
+version = "1.4.4"
+description = "A small Python module for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
+category = "main"
 optional = false
 python-versions = "*"
-version = "1.4.4"
 
 [[package]]
-category = "main"
-description = "Read/rewrite/write Python ASTs"
 name = "astor"
+version = "0.8.1"
+description = "Read/rewrite/write Python ASTs"
+category = "main"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,>=2.7"
-version = "0.8.1"
 
 [[package]]
-category = "main"
-description = "Cross-platform colored terminal text."
 name = "colorama"
+version = "0.4.4"
+description = "Cross-platform colored terminal text."
+category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-version = "0.4.4"
 
 [[package]]
-category = "main"
-description = "Pythonic argument parser, that will make you smile"
 name = "docopt"
-optional = false
-python-versions = "*"
 version = "0.6.2"
-
-[[package]]
+description = "Pythonic argument parser, that will make you smile"
 category = "main"
-description = "Infer file type and MIME type of any file/buffer. No external dependencies."
-name = "filetype"
 optional = false
 python-versions = "*"
-version = "1.0.7"
 
 [[package]]
-category = "main"
-description = "Recursive descent parsing library based on functional combinators"
 name = "funcparserlib"
+version = "1.0.0"
+description = "Recursive descent parsing library based on functional combinators"
+category = "main"
 optional = false
-python-versions = "*"
-version = "0.3.6"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, !=3.6.*"
 
 [[package]]
-category = "main"
-description = "Lisp and Python love each other."
 name = "hy"
+version = "1.0a4"
+description = "Lisp and Python love each other."
+category = "main"
 optional = false
-python-versions = "*"
-version = "0.19.0"
+python-versions = ">= 3.7, < 3.11"
 
 [package.dependencies]
-astor = ">=0.8"
+astor = {version = ">=0.8", markers = "python_version < \"3.9\""}
 colorama = "*"
-funcparserlib = ">=0.3.6"
+funcparserlib = ">=1.0.0a0"
 rply = ">=0.7.7"
 
 [[package]]
-category = "main"
-description = "Extensions to the standard Python datetime module"
 name = "python-dateutil"
+version = "2.8.2"
+description = "Extensions to the standard Python datetime module"
+category = "main"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
-version = "2.8.1"
 
 [package.dependencies]
 six = ">=1.5"
 
 [[package]]
-category = "main"
-description = "File type identification using libmagic"
 name = "python-magic"
+version = "0.4.25"
+description = "File type identification using libmagic"
+category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-version = "0.4.18"
 
 [[package]]
-category = "main"
-description = "A pure Python Lex/Yacc that works with RPython"
 name = "rply"
+version = "0.7.8"
+description = "A pure Python Lex/Yacc that works with RPython"
+category = "main"
 optional = false
 python-versions = "*"
-version = "0.7.7"
 
 [package.dependencies]
 appdirs = "*"
 
 [[package]]
-category = "main"
-description = "Python 2 and 3 compatibility utilities"
 name = "six"
+version = "1.16.0"
+description = "Python 2 and 3 compatibility utilities"
+category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
-version = "1.15.0"
 
 [[package]]
-category = "main"
-description = "Variables defined by the XDG Base Directory Specification"
 name = "xdg"
+version = "4.0.1"
+description = "Variables defined by the XDG Base Directory Specification"
+category = "main"
 optional = false
 python-versions = ">=3.6,<4.0"
-version = "4.0.1"
 
 [[package]]
-category = "main"
-description = "Library to (un)pack archives and (de)compress files"
 name = "xtract"
+version = "0.1a3"
+description = "Library to (un)pack archives and (de)compress files"
+category = "main"
 optional = false
 python-versions = "*"
-version = "0.1a3"
 
 [package.dependencies]
 python-magic = "*"
 
 [metadata]
-content-hash = "9b3332c7c3b5a10ba4105ff978ffa9b5e03a749c06cd49eae7d2b11e03e10bc3"
-python-versions = "^3.8"
+lock-version = "1.1"
+python-versions = ">=3.8,<3.11"
+content-hash = "19f478b15fb998a7123abaaa7444d1eb1d88b7fb30c1ee465d2690887d444578"
 
 [metadata.files]
 appdirs = [
@@ -137,32 +130,29 @@ colorama = [
 docopt = [
     {file = "docopt-0.6.2.tar.gz", hash = "sha256:49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491"},
 ]
-filetype = [
-    {file = "filetype-1.0.7-py2.py3-none-any.whl", hash = "sha256:353369948bb1c09b8b3ea3d78390b5586e9399bff9aab894a1dff954e31a66f6"},
-    {file = "filetype-1.0.7.tar.gz", hash = "sha256:da393ece8d98b47edf2dd5a85a2c8733e44b769e32c71af4cd96ed8d38d96aa7"},
-]
 funcparserlib = [
-    {file = "funcparserlib-0.3.6.tar.gz", hash = "sha256:b7992eac1a3eb97b3d91faa342bfda0729e990bd8a43774c1592c091e563c91d"},
+    {file = "funcparserlib-1.0.0-py2.py3-none-any.whl", hash = "sha256:280fa30e608d547581d65f9294f9bbda7475da86d85119079da4a8402315025f"},
+    {file = "funcparserlib-1.0.0.tar.gz", hash = "sha256:7dd33dd4299fc55cbdbf4b9fdfb3abc54d3b5ed0c694b83fb38e9e3e8ac38b6b"},
 ]
 hy = [
-    {file = "hy-0.19.0-py2.py3-none-any.whl", hash = "sha256:d2ed54995f05518c8038d06d916cb960e9e56050c4c4426cb11d0ed9650ab2e2"},
-    {file = "hy-0.19.0.tar.gz", hash = "sha256:3a5a1d76ddeb2f1d5de71ad1b1167799850db955b5eb0258e351fb182b2e6016"},
+    {file = "hy-1.0a4-py3-none-any.whl", hash = "sha256:bc484395b1bf7c900d8239e977ac5bcd377101bf04cb3dabc37fe1737d8ad908"},
+    {file = "hy-1.0a4.tar.gz", hash = "sha256:f514e45f1b71127f88ed0f233675698326b85a3bb204a3f9d9afab559bf3efb9"},
 ]
 python-dateutil = [
-    {file = "python-dateutil-2.8.1.tar.gz", hash = "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c"},
-    {file = "python_dateutil-2.8.1-py2.py3-none-any.whl", hash = "sha256:75bb3f31ea686f1197762692a9ee6a7550b59fc6ca3a1f4b5d7e32fb98e2da2a"},
+    {file = "python-dateutil-2.8.2.tar.gz", hash = "sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86"},
+    {file = "python_dateutil-2.8.2-py2.py3-none-any.whl", hash = "sha256:961d03dc3453ebbc59dbdea9e4e11c5651520a876d0f4db161e8674aae935da9"},
 ]
 python-magic = [
-    {file = "python-magic-0.4.18.tar.gz", hash = "sha256:b757db2a5289ea3f1ced9e60f072965243ea43a2221430048fd8cacab17be0ce"},
-    {file = "python_magic-0.4.18-py2.py3-none-any.whl", hash = "sha256:356efa93c8899047d1eb7d3eb91e871ba2f5b1376edbaf4cc305e3c872207355"},
+    {file = "python-magic-0.4.25.tar.gz", hash = "sha256:21f5f542aa0330f5c8a64442528542f6215c8e18d2466b399b0d9d39356d83fc"},
+    {file = "python_magic-0.4.25-py2.py3-none-any.whl", hash = "sha256:1a2c81e8f395c744536369790bd75094665e9644110a6623bcc3bbea30f03973"},
 ]
 rply = [
-    {file = "rply-0.7.7-py2.py3-none-any.whl", hash = "sha256:2c8083bf2853642a0e24de9a9db3ce2d25b3153037a7298d2ff9434413744e33"},
-    {file = "rply-0.7.7.tar.gz", hash = "sha256:4d6d25703efd28fb3d5707f7b3bd4fe66c306159a5c25af10ba26d206a66d00d"},
+    {file = "rply-0.7.8-py2.py3-none-any.whl", hash = "sha256:28ffd11d656c48aeb8c508eb382acd6a0bd906662624b34388751732a27807e7"},
+    {file = "rply-0.7.8.tar.gz", hash = "sha256:2a808ac25a4580a9991fc304d64434e299a8fc75760574492f242cbb5bb301c9"},
 ]
 six = [
-    {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},
-    {file = "six-1.15.0.tar.gz", hash = "sha256:30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259"},
+    {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
+    {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
 ]
 xdg = [
     {file = "xdg-4.0.1-py3-none-any.whl", hash = "sha256:bf9032b027e3061d38c362a21b14dcf057a5b5a4906956f8e8278cefdf73f38b"},

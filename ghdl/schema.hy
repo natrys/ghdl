@@ -6,6 +6,7 @@
           self.sleep 1
           self.dry-run False
           self.single None
+          self.failures []
           self.location (os.path.expanduser "~/.local/bin/"))))
 
 
@@ -15,7 +16,8 @@
           self.exists? False
           self.strip? True
           self.pre-release? False
-          self.isArchive? True))
+          self.isArchive? True
+          self.pin None))
 
   (defn pretty [self]
     (print f"Repo: {self.repo}")
