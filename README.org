@@ -1,6 +1,6 @@
 *** GHDL
 
-Download and keep (self-contained) binaries from Github Releases updated across machines with minimal intervention.
+Download and keep (self-contained) executables from Github Releases updated.
 
 *** Install
 
@@ -8,13 +8,13 @@ Download and keep (self-contained) binaries from Github Releases updated across 
 pip install ghdl
 #+end_src
 
-Additionally you need to have sqlite, libmagic and tools relevant to archives like tar, gzip, unzip etc. installed.
+Additionally, it requires your system to have sqlite, libmagic and tools relevant to archives like tar, gzip, unzip etc. installed.
 
 *** About
 
-More and more projects are doing self-contained multi platform/arch binary releases at github these days. While distro provided packages remain the best idea, they are not a portable/zero-maintenance solution. When you hop between machines running on different hardware/OS/architecture, it's convenient to just download binaries directly.
+More and more projects are doing self-contained multi-platform/arch binary releases at github. While distro provided packages remain the best idea, they are not a portable/zero-maintenance solution. If you hop between machines running on different hardware/OS/architecture, it's convenient to just download binaries directly.
 
-Except doing so and keeping them updated manually is tedious. With this tool you can automate the task by encapsulating the logic in a config file which you can then carry aroud, maybe even hook up to a cron and forget.
+But doing so and keeping them updated manually is tedious. With this tool you can automate the task by encapsulating the logic in a config file which you can then carry aroud, maybe even hook up to a cron and forget.
 
 *** Config
 
@@ -33,7 +33,7 @@ These are the options you can specify:
 
 ***** =:asset-filter= 
 
-A regular expression that can uniquely single out an asset from a list of them in the latest release of target repo (required). Matching is done case-insensitively.
+A regular expression that can uniquely identify an asset from the list of them in the latest release of target repo (required). Matching is done case-insensitively.
 
 ***** =:name=
 
@@ -41,7 +41,7 @@ Name of the binary to save as (optional). Default is to infer it from repo name,
 
 ***** =:basename-glob= 
 
-Most of the time when asset is an archive, ghdl automatically extracts it, but it needs to know which file to pick as there are usually there are multiple files in an archive. By default it can filter only binaries using libmagic, and by default it looks for a binary that matches "=*{name}*=" glob pattern which usually works (=name= is what's described above). So in practice, you may need to set this very rarely, if at all. For example, below you could omit it because the binary is named "devd" which is matched by the glob "\ast{}devd\ast{}" anyway:
+When asset is an archive ghdl automatically extracts it, but it needs to know which file to install as there are usually there are multiple files in an archive. By default it can filter only binaries using libmagic, and by default it looks for a binary that matches "=*{name}*=" glob pattern which almost always works (=name= is what's described above). So in practice, you will likely need to set this very rarely. For example, below you could omit it because the binary is named "devd" which is matched by the glob "\ast{}devd\ast{}" anyway:
 
 #+begin_src conf
 (repo "cortesi/devd"
@@ -99,7 +99,7 @@ Sometimes you might want to pin a particular repo to a particular architecture a
   :asset-filter "deno")
 #+end_src
 
-As this is an aarch64 specific project, pinning ensures the recipe won't even be run on say x86_64.
+As this is an aarch64 specific project, pinning ensures the recipe won't even be run on say x86_64, so you are spared of the failure message.
 
 **** Advanced Configuration
 
@@ -136,9 +136,9 @@ If that seems ugly or even inadequate, =:asset-filter= can also be a function (o
   :asset-filter
     (fn [asset]
       (and
-        (in (.replace (platform.machine) "_" "-") asset)
-        (in (.lower (platform.system)) asset)
-        (.endswith asset ".gz"))))
+        (in (str.replace (platform.machine) "_" "-") asset)
+        (in (str.lower (platform.system)) asset)
+        (str.endswith asset ".gz"))))
 #+end_src
 
 **** Additional Config

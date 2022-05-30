@@ -35,6 +35,7 @@
 
 (setv archive-mime-types #{
   "application/zip"
+  "application/gzip"
   "application/x-xz"
   "application/x-tar"
   "application/x-gzip"
