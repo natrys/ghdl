@@ -1,6 +1,6 @@
 (setv packages [])
 
-(import hy hy.importer)
+(import hy hy.reader)
 (import sys os stat re shutil glob platform)
 
 (import xdg [XDG_CONFIG_HOME] pathlib)
@@ -36,24 +36,24 @@
             (-> record.repo (.split "/") (get 1)))
       (setv record.name (get info "name")))
 
-  (if (in "archive" info)
-      (setv record.isArchive? (get info "archive")))
+  (when (in "archive" info)
+    (setv record.isArchive? (get info "archive")))
 
-  (if (in "prerelease" info)
-      (setv record.pre-release? (get info "prerelease")))
+  (when (in "prerelease" info)
+    (setv record.pre-release? (get info "prerelease")))
 
   (if (in "basename_glob" info)
       (setv record.basename-glob (get info "basename_glob"))
       (setv record.basename-glob f"*{record.name}*"))
 
-  (if (in "strip" info)
-      (setv record.strip? (get info "strip")))
+  (when (in "strip" info)
+    (setv record.strip? (get info "strip")))
 
-  (if (in "pin" info)
-      (setv record.pin (get info "pin")))
+  (when (in "pin" info)
+    (setv record.pin (get info "pin")))
   
   (-> packages (.append record)))
 
 
 (with [f (open config-file)]
-  (hy.eval (hy.importer.hy-parse (.read f))))
+  (hy.eval (hy.reader.read-many (.read f))))

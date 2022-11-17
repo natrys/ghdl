@@ -1,0 +1,457 @@
+(config
+  ;; :token "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+  :location "~/.local/bin/")
+
+(setv my-os (platform.system)
+      my-arch (platform.machine))
+
+(setv arch-pattern
+  (cond (= my-arch "x86_64") "(?:x86[-_]64|x64|amd64|64bit)"
+        (= my-arch "aarch64") "(?:arm|aarch)64"))
+
+(setv os-arch f"{my-os}[-_.]{arch-pattern}")
+
+(setv rust f"{my-arch}.*?{my-os}")
+
+;;;;;;;;
+
+(repo "containers/crun"
+  :name "crun"
+  :asset-filter f"{os-arch}-disable-systemd$")
+
+(repo "smallhadroncollider/taskell"
+  :name "taskell"
+  :pin "x86_64"
+  :asset-filter
+    (fn [url]
+      (and
+        (in (.replace (platform.machine) "_" "-") url)
+        (in (.lower (platform.system)) url)
+        (.endswith url ".gz"))))
+
+(repo "caddyserver/caddy"
+  :asset-filter f"{os-arch}.*gz")
+
+(repo "cortesi/devd"
+  :asset-filter "linux64")
+
+(repo "cortesi/modd"
+  :asset-filter "linux64")
+
+(repo "hadolint/hadolint"
+  :pin "x86_64"
+  :asset-filter os-arch)
+
+(repo "kubernetes/kompose"
+  :asset-filter f"{os-arch}.*gz$")
+
+(repo "digitalocean/doctl"
+  :asset-filter os-arch)
+
+(repo "neovim/neovim"
+  :asset-filter "appimage$"
+  :pin "x86_64"
+  :strip False
+  :prerelease True)
+
+(repo "borkdude/babashka"
+  :name "bb"
+  :asset-filter os-arch
+  :prerelease True)
+
+(repo "direnv/direnv"
+  :asset-filter os-arch)
+
+(repo "denoland/deno"
+  :pin "x86_64"
+  :asset-filter f"{my-arch}.*?{my-os}")
+
+(repo "jhspetersson/fselect"
+  :pin "x86_64"
+  :asset-filter "musl")
+
+(repo "BurntSushi/ripgrep"
+  :name "rg"
+  :pin "x86_64"
+  :asset-filter "musl")
+
+(repo "github/hub"
+  :asset-filter os-arch)
+
+(repo "koalaman/shellcheck"
+  :asset-filter os-arch)
+
+(repo "benibela/xidel"
+  :pin "x86_64"
+  :asset-filter "linux64")
+
+(repo "ogham/exa"
+  :pin "x86_64"
+  :asset-filter os-arch)
+
+(repo "rancher/k3s"
+  :asset-filter
+    (fn [name]
+       (return
+         (cond (= my-arch "x86_64") (= name "k3s")
+               (= my-arch "aarch64") (= name "k3s-arm64")))))
+
+(repo "rancher/k3d"
+  :prerelease True
+  :asset-filter os-arch)
+
+(repo "rcoh/angle-grinder"
+  :name "agrind"
+  :pin "x86_64"
+  :asset-filter rust)
+
+(repo "nextdns/nextdns"
+  :asset-filter f"{os-arch}.*?gz")
+
+(repo "earthly/earthly"
+  :asset-filter f"earthly-{os-arch}")
+
+(repo "buildpacks/pack"
+  :pin "x86_64"
+  :asset-filter
+    (fn [url]
+       (return
+         (cond (= my-arch "x86_64") (in f"{(str.lower my-os)}.tgz" url)
+               (= my-arch "aarch64") (in f"{(str.lower my-os)}-{my-arch}.tgz" url)))))
+
+(repo "cloudflare/wrangler"
+  :pin "x86_64"
+  :asset-filter f"{my-arch}.*?{my-os}")
+
+(repo "gohugoio/hugo"
+  :asset-filter f"{os-arch}.*gz$")
+
+(repo "okteto/okteto"
+  :asset-filter f"{os-arch}$")
+
+(repo "rclone/rclone"
+  :asset-filter f"{os-arch}.*zip$")
+
+(repo "autozimu/LanguageClient-neovim"
+  :asset-filter f"{my-arch}.*?{my-os}")
+
+(repo "amzn/askalono"
+  :pin "x86_64"
+  :asset-filter my-os)
+
+(repo "wagoodman/dive"
+  :asset-filter f"{os-arch}.*\\.gz$")
+
+(repo "adnanh/webhook"
+  :asset-filter os-arch)
+
+(repo "kubernetes/minikube"
+  :asset-filter f"{os-arch}.*gz$")
+
+(repo "purescript/purescript"
+  :name "purs"
+  :pin "x86_64"
+  :asset-filter
+    (fn [url]
+      (and
+        (in (.lower (platform.system)) url)
+        (.endswith url "tar.gz"))))
+
+(repo "purescript/spago"
+  :pin "x86_64"
+  :asset-filter f"{my-os}.*tar\\.gz$")
+
+(repo "derailed/k9s"
+  :asset-filter os-arch)
+
+(repo "exercism/cli"
+  :name "exercism"
+  :asset-filter os-arch)
+
+(repo "firecracker-microvm/firecracker"
+  :asset-filter my-arch)
+
+(repo "gleam-lang/gleam"
+  :prerelease True
+  :asset-filter f"{rust}-musl.tar.gz$")
+
+(repo "kmonad/kmonad"
+  :prerelease True
+  :asset-filter my-os
+  :pin "x86_64")
+
+(repo "rust-analyzer/rust-analyzer"
+  :asset-filter rust)
+
+(repo "mun-lang/mun"
+  :asset-filter "linux64"
+  :pin "x86_64"
+  :prerelease True)
+
+(repo "hairyhenderson/gomplate"
+  :asset-filter f"{os-arch}-slim")
+
+(repo "superfly/flyctl"
+  :asset-filter f"{os-arch}.*gz$")
+
+(repo "samtay/so"
+  :asset-filter rust)
+
+(repo "loadimpact/k6"
+  :asset-filter f"{os-arch}.*gz$")
+
+(repo "liquidata-inc/dolt"
+  :asset-filter os-arch
+  :basename-glob "dolt")
+
+(repo "duckdb/duckdb"
+  :asset-filter f"cli-{os-arch}")
+
+(repo "alecthomas/chroma"
+  :asset-filter os-arch)
+
+(repo "svenstaro/miniserve"
+  :asset-filter rust)
+
+(repo "sharkdp/diskus"
+  :asset-filter rust)
+
+(repo "kubernetes-sigs/kind"
+  :asset-filter os-arch)
+
+(repo "extrawurst/gitui"
+  :pin "x86_64"
+  :asset-filter "musl")
+
+(repo "2mol/pboy"
+  :pin "x86_64"
+  :asset-filter my-os)
+
+(repo "NerdyPepper/dijo"
+  :asset-filter
+    (fn [url]
+      (and
+        (in (.lower (platform.system)) url)
+        (in (.lower (platform.machine)) url))))
+
+(repo "profclems/glab"
+  :asset-filter f"{os-arch}.tar.gz")
+
+(repo "rustwasm/wasm-pack"
+  :asset-filter rust)
+
+(repo "hatoo/oha"
+  :asset-filter os-arch)
+
+(repo "prometheus/node_exporter"
+  :asset-filter os-arch)
+
+(repo "nginxinc/nginx-prometheus-exporter"
+  :asset-filter os-arch)
+
+(repo "alexellis/k3sup"
+  :asset-filter
+    (fn [name]
+       (return
+         (cond (= my-arch "x86_64") (= name "k3sup")
+               (= my-arch "aarch64") (= name "k3sup-arm64")))))
+
+(repo "jgm/pandoc"
+  :asset-filter os-arch)
+
+(repo "weaveworks/ignite"
+  :asset-filter arch-pattern)
+
+(repo "fatedier/frp"
+  :asset-filter os-arch)
+
+(repo "schollz/croc"
+  :asset-filter f"{os-arch}.tar.gz")
+
+(repo "davesnx/query-json"
+  :asset-filter os-arch)
+
+(repo "dandavison/delta"
+  :asset-filter f"{rust}.*?")
+
+(repo "tidwall/jj"
+  :asset-filter os-arch)
+
+(repo "cli/cli"
+  :name "gh"
+  :asset-filter f"{os-arch}.*tar\\.gz")
+
+(repo "go-acme/lego"
+  :asset-filter os-arch)
+
+(repo "cycloidio/inframap"
+  :asset-filter os-arch)
+
+(repo "nakabonne/ali"
+  :asset-filter f"{os-arch}.*tar\\.gz")
+
+(repo "screego/server"
+  :name "screego"
+  :asset-filter os-arch)
+
+(repo "epi052/feroxbuster"
+  :asset-filter f"{my-arch}-{my-os}.*\\.tar.gz")
+
+(repo "Nukesor/pueue"
+  :asset-filter os-arch)
+
+(repo "slackhq/nebula"
+  :asset-filter os-arch)
+
+(repo "jesseduffield/lazygit"
+  :asset-filter os-arch)
+
+(repo "GoogleContainerTools/skaffold"
+  :asset-filter os-arch)
+
+(repo "ahmetb/kubectx"
+  :asset-filter os-arch)
+
+(repo "networkimprov/mnm-hammer"
+  :prerelease True
+  :asset-filter os-arch)
+
+(repo "ducaale/xh"
+  :asset-filter f"{rust}.*?musl")
+
+(repo "rs/curlie"
+  :asset-filter f"{os-arch}.*tar.gz$")
+
+(repo "sayanarijit/xplr"
+  :pin "x86_64"
+  :asset-filter f"{my-os}.*tar\\.gz$")
+
+(repo "soywod/unfog"
+  :asset-filter my-os
+  :pin "x86_64")
+
+(repo "cloudflare/cloudflared"
+  :asset-filter f"cloudflared-{os-arch}$")
+
+(repo "hashicorp/terraform-ls"
+  :asset-filter os-arch)
+
+(repo "aquasecurity/trivy"
+  :asset-filter f"{os-arch}.*gz$")
+
+(repo "commercialhaskell/stack"
+  :asset-filter f"{os-arch}.*gz$")
+
+(repo "dundee/gdu"
+  :asset-filter os-arch)
+
+(repo "ogham/dog"
+  :asset-filter f"{rust}.*zip")
+
+(repo "latex-lsp/texlab"
+  :asset-filter f"{my-arch}-{my-os}")
+
+(repo "filebrowser/filebrowser"
+  :asset-filter os-arch)
+
+(repo "cantino/mcfly"
+  :asset-filter rust)
+
+(repo "zellij-org/zellij"
+  :asset-filter rust)
+
+(repo "sharkdp/bat"
+  :asset-filter rust)
+
+(repo "sharkdp/fd"
+  :asset-filter rust)
+
+(repo "nektos/act"
+  :asset-filter os-arch)
+
+(repo "ClementTsang/bottom"
+  :name "btm"
+  :asset-filter f"{rust}.*?\\.tar\\.gz$")
+
+(repo "Yvee1/hascard"
+  :asset-filter my-os
+  :pin "x86_64")
+
+(repo "suntong/cascadia"
+  :asset-filter f"{os-arch}.*tar\\.gz$")
+
+(repo "mattn/efm-langserver"
+  :asset-filter os-arch)
+
+(repo "dominikh/go-tools"
+  :name "staticcheck"
+  :asset-filter os-arch)
+
+(repo "benbjohnson/litestream"
+  :asset-filter f"{os-arch}-static")
+
+(repo "haampie/libtree"
+  :asset-filter f"{my-arch}$")
+
+(repo "ivaaaan/smug"
+  :asset-filter os-arch)
+
+(repo "authelia/authelia"
+  :asset-filter os-arch)
+
+(repo "ory/kratos"
+  :prerelease True
+  :asset-filter f"{my-os}_sqlite_{arch-pattern}")
+
+(repo "gravitl/netmaker"
+  :asset-filter
+    (fn [url]
+      (cond (= my-arch "x86_64") (.endswith url "netclient")
+            (= my-arch "aarch64") (.endswith url "arm64"))))
+
+(repo "timothyYe/godns"
+  :asset-filter os-arch)
+
+(repo "LukeChannings/deno-arm64"
+  :name "deno"
+  :pin "aarch64"
+  :asset-filter "deno")
+
+(repo "Orange-OpenSource/hurl"
+  :basename-glob "hurl"
+  :asset-filter f"{arch-pattern}-{my-os}")
+
+(repo "tailwindlabs/tailwindcss"
+  :asset-filter os-arch
+  :strip False)
+
+(repo "boyter/scc"
+  :asset-filter os-arch)
+
+(repo "aristocratos/btop"
+  :asset-filter f"{arch-pattern}-{my-os}-musl")
+
+(repo "umputun/remark42"
+  :asset-filter os-arch)
+
+(repo "thedodd/trunk"
+  :pin "x86_64"
+  :asset-filter rust)
+
+(repo "supabase/cli"
+  :name "supabase"
+  :asset-filter f"{os-arch}.*gz$")
+
+(repo "mgdm/htmlq"
+  :pin "x86_64"
+  :asset-filter f"{my-arch}-{my-os}\\.tar\\.gz")
+
+(repo "xyproto/algernon"
+  :asset-filter os-arch)
+
+(repo "syncthing/syncthing"
+  :asset-filter os-arch)
+
+(repo "Wilfred/difftastic"
+  :name "difft"
+  :asset-filter rust)

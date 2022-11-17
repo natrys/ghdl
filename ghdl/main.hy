@@ -26,8 +26,8 @@
 (defn url-select [asset-filter url_data]
   (defn run-filter [f]
     (for [[asset url] url_data]
-      (if (f asset)
-          (return url))))
+      (when (f asset)
+        (return url))))
   
   (if (isinstance asset-filter str)
       (do
@@ -44,35 +44,33 @@
   (when (not remote-metadata)
     (do
       (setv record.toUpdate? False)
-      (.append Config.failures (, record.repo "Network"))
+      (.append Config.failures #(record.repo "Network"))
       (return)))
 
-  (setv dl-url (url-select record.asset-filter remote-metadata.url_data))
+  (setv record.tag remote-metadata.tag)
+  (setv record.timestamp remote-metadata.timestamp)
 
-  ;; User filter couldn't find any candidate
-  (when (not dl-url)
+  (setv dl-url (url-select record.asset-filter remote-metadata.url_data))
+  (if (not dl-url)
       (do
         (setv record.toUpdate? False)
         (setv record.url "N/A")
-        (.append Config.failures (, record.repo "No Matching URL"))
-        (return)))
-
-  (setv record.url dl-url)
-  (setv record.tag remote-metadata.tag)
-  (setv record.timestamp remote-metadata.timestamp))
+        (.append Config.failures #(record.repo "No Matching URL"))
+        (return))
+      (setv record.url dl-url)))
 
 
 (defn add-local-metadata [record]
   (setv local (local-db.fetch-row record.repo))
   (when local
     (setv record.exists? True)
-    (if (<= record.timestamp local.timestamp)
-        (setv record.toUpdate? False))))
+    (when (and record.toUpdate? (<= record.timestamp local.timestamp))
+      (setv record.toUpdate? False))))
 
 
 (defn check-single [repo]
   (as-> Config.single it
-    (and it (!= repo it))))
+        (and it (!= repo it))))
 
 
 (defn fetch-remote-local-metadata [records]
@@ -133,6 +131,6 @@
 (defn main []
   (fetch-remote-local-metadata records)
   (unless Config.dry-run (process-loop records))
-  (for [(, repo reason) Config.failures]
+  (for [#(repo reason) Config.failures]
     (print f"Failed: https://github.com/{repo} ({reason})"))
   (local-db.finalise))

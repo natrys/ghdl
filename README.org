@@ -20,7 +20,7 @@ But doing so and keeping them updated manually is tedious. With this tool you ca
 
 The config file is simple, and should be provided at =~/.config/ghdl/config=. It looks like:
 
-#+begin_src conf
+#+begin_src hy
 (repo "containers/crun"
   :asset-filter "static")
 #+end_src
@@ -43,7 +43,7 @@ Name of the binary to save as (optional). Default is to infer it from repo name,
 
 When asset is an archive ghdl automatically extracts it, but it needs to know which file to install as there are usually there are multiple files in an archive. By default it can filter only binaries using libmagic, and by default it looks for a binary that matches "=*{name}*=" glob pattern which almost always works (=name= is what's described above). So in practice, you will likely need to set this very rarely. For example, below you could omit it because the binary is named "devd" which is matched by the glob "\ast{}devd\ast{}" anyway:
 
-#+begin_src conf
+#+begin_src hy
 (repo "cortesi/devd"
   :asset-filter "linux64"
   :basename-glob "devd") ;; Not necessary
@@ -51,7 +51,7 @@ When asset is an archive ghdl automatically extracts it, but it needs to know wh
 
 And in the following case, again the binary name "kompose-linux-amd64" is already covered by glob "\ast{}kompose\ast{}":
 
-#+begin_src conf
+#+begin_src hy
 (repo "kubernetes/kompose"
   :url-filter "linux-amd64.*gz$"
   :basename-glob "kompose*") ;; Not necessary
@@ -59,7 +59,7 @@ And in the following case, again the binary name "kompose-linux-amd64" is alread
 
 Sometimes the default is too broad. For example, in case of repo "=github/hub=" the binary is named just "hub" which isn't a problem, but the glob "\ast{}hub\ast{}" matches not just the binary but some other doc file too. Except that's where libmagic comes in and filters out all non-application mimetypes.
 
-#+begin_src conf
+#+begin_src hy
 (repo "github/hub"
   :asset-filter "linux-amd64"
   :basename-glob "hub") ;; Again not necessary
@@ -69,7 +69,7 @@ Sometimes the default is too broad. For example, in case of repo "=github/hub=" 
 
 Whether to run strip on the downloaded binary or not, default is True. But you may need to set it to False often, say for appimage:
 
-#+begin_src conf
+#+begin_src hy
 (repo "neovim/neovim"
   :url-filter "appimage$"
   :strip False)
@@ -81,7 +81,7 @@ Stripping can reduce the size of binaries considerably (here the /bin/strip is i
 
 You can also choose to live in the edge, some packages for some reason choose to release as pre-release only anyway (so far).
 
-#+begin_src conf
+#+begin_src hy
 (repo "borkdude/babashka"
   :name "bb"
   :asset-filter "static"
@@ -92,7 +92,7 @@ You can also choose to live in the edge, some packages for some reason choose to
 
 Sometimes you might want to pin a particular repo to a particular architecture as that's all they support in github releases. Here pinning can be useful to create portable configuration, as ghdl simply won't do anything when run on anything different. For example,
 
-#+begin_src conf
+#+begin_src hy
 (repo "LukeChannings/deno-arm64"
   :name "deno"
   :pin "aarch64"
@@ -110,20 +110,17 @@ The goal is to eventually define something that hopefully can continue to work c
       my-arch (platform.machine))
 
 (setv arch-pattern
-  (cond [(= my-arch "x86_64") "(?:x86[-_]64|amd64|64bit)"]
-        [(= my-arch "aarch64") "(?:arm|aarch)64"]))
+  (cond (= my-arch "x86_64") "(?:x86[-_]64|x64|amd64|64bit)"
+        (= my-arch "aarch64") "(?:arm|aarch)64"))
 
-;; many golang projects follow this pattern
+;; Many golang projects follow this pattern
 (setv os-arch f"{my-os}[-_.]{arch-pattern}")
 
-;; many rust projects follow this pattern
+;; Many rust projects follow this pattern
 (setv rust f"{my-arch}.*?{my-os}")
 
 (repo "caddyserver/caddy"
   :asset-filter f"{os-arch}.*gz")
-
-(repo "digitalocean/doctl"
-  :asset-filter os-arch)
 
 (repo "sharkdp/bat"
   :asset-filter rust)
@@ -145,7 +142,7 @@ If that seems ugly or even inadequate, =:asset-filter= can also be a function (o
 
 I tried not to trip abuse detector (no async/rate limit etc.) but you should user your own API token if possible. Unauthorized API is only limited to 60 calls per hour, so if you have more than 60 repos you need to use a token anyway.
 
-#+begin_src conf
+#+begin_src hy
 (config
   :location "~/.local/bin/"
   :token "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
@@ -153,9 +150,7 @@ I tried not to trip abuse detector (no async/rate limit etc.) but you should use
 
 **** Sample config
 
-Here is my config file as an example where I am tracking 115 projects (as of 2022-05-03), most of which has been well behaved and consistent for ~2 years since creating ghdl:
-
-https://gist.github.com/natrys/64fde498a4b4bbf980490b45010c3914
+The repo contains a [[file:./sample-config][sample config]] file as an example where I am tracking 120+ projects (as of writing this). Most of them has been well behaved and consistent since creating ghdl.
 
 *** TODO/Limitation/Ideas
 

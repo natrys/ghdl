@@ -27,8 +27,7 @@
 (defn get-metadata [resp]
   (setv urls
         (lfor asset (get resp "assets")
-              (, (get asset "name")
-                 (get asset "browser_download_url"))))
+              #((get asset "name") (get asset "browser_download_url"))))
   (Remote (get resp "tag_name")
           (to-unix (get resp "published_at"))
           urls))

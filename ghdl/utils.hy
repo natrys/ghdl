@@ -19,13 +19,13 @@
 
 
 (defn make-dir [dir]
-  (if (not (os.path.exists dir))
-      (os.makedirs dir)))
+  (when (not (os.path.exists dir))
+    (os.makedirs dir)))
 
 
 (defn make-file [file]
-  (if (not (os.path.exists file))
-      (os.mknod file)))
+  (when (not (os.path.exists file))
+    (os.mknod file)))
 
 
 (defn make-executable [filename]
