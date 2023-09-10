@@ -1,4 +1,6 @@
 (import xtract)
+(import httpx)
+(import asyncio)
 (import platform)
 
 (import fnmatch [fnmatch] os re shutil traceback sys time)
@@ -36,9 +38,9 @@
       (run-filter asset-filter)))
 
 
-(defn add-remote-metadata [record]
+(defn/a add-remote-metadata [record client]
   (setv remote-metadata
-        (remote.metadata record.repo record.pre-release? Config.token))
+        (await (remote.metadata record.repo record.pre-release? client Config.token)))
 
   ;; Network error
   (when (not remote-metadata)
@@ -73,16 +75,24 @@
         (and it (!= repo it))))
 
 
-(defn fetch-remote-local-metadata [records]
-  (for [record records]
-    (when (check-single record.repo) (continue))
-    (when (and record.pin (not (= (platform.machine) record.pin))) (continue))
+(defn/a fetch-remote-local-metadata [records]
+  (setv limits (httpx.Limits :max_connections 10))
+  (with/a [client (httpx.AsyncClient :base_url "https://api.github.com/repos/"
+                                     :limits limits
+                                     :follow_redirects True)]
+    (await
+      (asyncio.gather
+        #*(gfor record records (fetch-remote-local-metadata-1 record client))
+        :return_exceptions True))))
 
-    (add-remote-metadata record)
-    ;; rate limiting can't hurt
-    (time.sleep Config.sleep)
-    (add-local-metadata record)
-    (record.pretty)))
+
+(defn/a fetch-remote-local-metadata-1 [record client]
+  (when (check-single record.repo) (return))
+  (when (and record.pin (not (= (platform.machine) record.pin))) (return))
+
+  (await (add-remote-metadata record client))
+  (add-local-metadata record)
+  (record.pretty))
 
 
 (defn process-loop [records]
@@ -110,7 +120,7 @@
 
     (shutil.move filename record.name)
     (utils.make-executable record.name)
-    (when record.strip? (os.system f"strip {record.name}"))
+    (when record.strip? (os.system f"strip {record.name} 2>/dev/null"))
 
     (setv destination (os.path.join Config.location record.name))
     (shutil.move record.name destination)
@@ -129,7 +139,7 @@
 
 
 (defn main []
-  (fetch-remote-local-metadata records)
+  (asyncio.run (fetch-remote-local-metadata records))
   (unless Config.dry-run (process-loop records))
   (for [#(repo reason) Config.failures]
     (print f"Failed: https://github.com/{repo} ({reason})"))

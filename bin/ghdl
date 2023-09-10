@@ -20,7 +20,7 @@ Options:
 (import ghdl)
 
 (when (= __name__ "__main__")
-    (setv args (docopt __doc__ :version ghdl.__version__))
-    (when (get args "--dry-run") (ghdl.set-dry))
-    (when (setx repo (get args "--force")) (ghdl.set-single (.lower repo)))
-    (ghdl.main))
+  (setv args (docopt __doc__ :version ghdl.__version__))
+  (when (get args "--dry-run") (ghdl.set-dry))
+  (when (setx repo (get args "--force")) (ghdl.set-single (.lower repo)))
+  (ghdl.main))

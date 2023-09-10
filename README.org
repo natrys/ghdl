@@ -1,6 +1,6 @@
 *** GHDL
 
-Download and keep (self-contained) executables from Github Releases updated.
+Download and keep self-contained executables from Github Releases updated.
 
 *** Install
 
@@ -12,62 +12,64 @@ Additionally, it requires your system to have sqlite, libmagic and tools relevan
 
 *** About
 
-More and more projects are doing self-contained multi-platform/arch binary releases at github. While distro provided packages remain the best idea, they are not a portable/zero-maintenance solution. If you hop between machines running on different hardware/OS/architecture, it's convenient to just download binaries directly.
+More and more projects are doing self-contained multi-platform/architecture binary releases at github. While distro provided packages remain the best idea, they are not a portable/zero-maintenance solution. If you hop between machines running on different hardware/OS/architecture, it's convenient to just download binaries directly.
 
 But doing so and keeping them updated manually is tedious. With this tool you can automate the task by encapsulating the logic in a config file which you can then carry aroud, maybe even hook up to a cron and forget.
 
 *** Config
 
-The config file is simple, and should be provided at =~/.config/ghdl/config=. It looks like:
+The config file should be provided at =~/.config/ghdl/config=. It looks like:
 
 #+begin_src hy
 (repo "containers/crun"
   :asset-filter "static")
 #+end_src
 
-And when you run ghdl, it will download the asset with "static" in its name, extract the archive if needs be, find the binary and place it in =~/.local/bin/= (by default). And next time you run ghdl it won't be downloaded again, unless upstream releases new version in-between.
+When you run ghdl, it will download the asset with "static" in its name, extract the archive if needed, find the binary, and place it in =~/.local/bin/= (by default). And next time you run ghdl it won't be downloaded again, unless upstream releases new version in-between.
 
 **** Options
 
 These are the options you can specify:
 
-***** =:asset-filter= 
+***** =:asset-filter= (required)
 
-A regular expression that can uniquely identify an asset from the list of them in the latest release of target repo (required). Matching is done case-insensitively.
+A regular expression that can uniquely identify an asset from a list of them in the latest _release_ section of the target repo. Matching is done case-insensitively.
 
 ***** =:name=
 
-Name of the binary to save as (optional). Default is to infer it from repo name, so the name is "crun" when the repo is "containers/crun".
+Name the binary will be saved as. Default is to infer it from repo name, so when the repo is "containers/crun" the name will by default be "crun".
 
-***** =:basename-glob= 
+***** =:basename-glob=
 
-When asset is an archive ghdl automatically extracts it, but it needs to know which file to install as there are usually there are multiple files in an archive. By default it can filter only binaries using libmagic, and by default it looks for a binary that matches "=*{name}*=" glob pattern which almost always works (=name= is what's described above). So in practice, you will likely need to set this very rarely. For example, below you could omit it because the binary is named "devd" which is matched by the glob "\ast{}devd\ast{}" anyway:
+When asset is an archive, ghdl automatically extracts it. But it needs to know which file to install, as there are usually multiple files in the archive. By default it can filter out only binaries using libmagic, and by default it looks for a binary that matches "=*{name}*=" glob pattern which almost always works (=name= is what's described above). So in practice, you will likely need to set this very rarely. For example, below you could omit it because the binary is named "devd" which is matched by the glob "\ast{}devd\ast{}" anyway:
 
 #+begin_src hy
 (repo "cortesi/devd"
-  :asset-filter "linux64"
-  :basename-glob "devd") ;; Not necessary
+  :basename-glob "devd" ;; Not necessary
+  :asset-filter "linux64")
 #+end_src
 
 And in the following case, again the binary name "kompose-linux-amd64" is already covered by glob "\ast{}kompose\ast{}":
 
 #+begin_src hy
 (repo "kubernetes/kompose"
-  :url-filter "linux-amd64.*gz$"
-  :basename-glob "kompose*") ;; Not necessary
+  :basename-glob "kompose*" ;; Not necessary
+  :asset-filter "linux-amd64.*gz$")
 #+end_src
 
 Sometimes the default is too broad. For example, in case of repo "=github/hub=" the binary is named just "hub" which isn't a problem, but the glob "\ast{}hub\ast{}" matches not just the binary but some other doc file too. Except that's where libmagic comes in and filters out all non-application mimetypes.
 
 #+begin_src hy
 (repo "github/hub"
-  :asset-filter "linux-amd64"
-  :basename-glob "hub") ;; Again not necessary
+  :basename-glob "hub" ;; Again not necessary
+  :asset-filter "linux-amd64")
 #+end_src
+
+So in practice, it's probably going to be exceedingly rare when this setting will be called for action.
 
 ***** =:strip=
 
-Whether to run strip on the downloaded binary or not, default is True. But you may need to set it to False often, say for appimage:
+Whether to run strip on the downloaded binary or not, default is True. But you may need to set it to =False= sometimes, e.g. say for appimages:
 
 #+begin_src hy
 (repo "neovim/neovim"
@@ -75,7 +77,7 @@ Whether to run strip on the downloaded binary or not, default is True. But you m
   :strip False)
 #+end_src
 
-Stripping can reduce the size of binaries considerably (here the /bin/strip is invoked without argument), but this might not be without trade-off. I have once seen a distro turn off stripping for Golang citing strange behaviour. I have never encountered any problem myself though, so I am keeping this True by default.
+Stripping can reduce the size of binaries considerably (here the /bin/strip is invoked without argument), but this might not be without trade-off. I have once seen a distro turn off stripping for Golang binaries citing strange behaviour. I have never encountered any problem myself though, so I am keeping this True by default.
 
 ***** =:prerelease=
 
@@ -103,7 +105,7 @@ As this is an aarch64 specific project, pinning ensures the recipe won't even be
 
 **** Advanced Configuration
 
-The goal is to eventually define something that hopefully can continue to work cross-platform. So ghdl config file is actually Hy code, which means one can do whatever they can in python (some useful modules are loaded already):
+The goal is to eventually define something that hopefully can continue to work cross-platform. So ghdl config file is actually Hy code, which means one can do whatever they can in python, and some useful python modules (=re=, =platform= etc.) are loaded already:
 
 #+begin_src hy
 (setv my-os (platform.system)
@@ -119,6 +121,7 @@ The goal is to eventually define something that hopefully can continue to work c
 ;; Many rust projects follow this pattern
 (setv rust f"{my-arch}.*?{my-os}")
 
+;; Finally define the repos
 (repo "caddyserver/caddy"
   :asset-filter f"{os-arch}.*gz")
 
@@ -126,9 +129,9 @@ The goal is to eventually define something that hopefully can continue to work c
   :asset-filter rust)
 #+end_src
 
-If that seems ugly or even inadequate, =:asset-filter= can also be a function (of type =String -> Bool=):
+If that seems ugly or inadequate, =:asset-filter= can also be a function (of type =String -> Bool=):
 
-#+begin_src conf
+#+begin_src hy
 (repo "smallhadroncollider/taskell"
   :asset-filter
     (fn [asset]
@@ -140,7 +143,7 @@ If that seems ugly or even inadequate, =:asset-filter= can also be a function (o
 
 **** Additional Config
 
-I tried not to trip abuse detector (no async/rate limit etc.) but you should user your own API token if possible. Unauthorized API is only limited to 60 calls per hour, so if you have more than 60 repos you need to use a token anyway.
+You really should user your own API token if possible. Unauthorized API is only limited to 60 calls per hour, so if you have more than 60 repos you need to use a token anyway.
 
 #+begin_src hy
 (config
@@ -156,5 +159,5 @@ The repo contains a [[file:./sample-config][sample config]] file as an example w
 
 - Some programs use same repo to release different parts of project (e.g. dnote does it for server and cli), ghdl only looks at the last release and can't differentiate between them.
 - Some projects include multiple binaries. That's not yet supported, though is probably simple to add.
-- Windows/MacOS doesn't work yet (so much for cross-platform), although fix should be simple; I just don't know various xdg path equivalents in it nor do I have motivation to test. However one needs to have tar, gzip etc. in the path which means the likes of msys2, git bash, WSL or whatever, and in those it just might work ootb.
-- Downloads from github is excessively slow in most parts of the world, nothing I can do about that apart from perhaps switching to an external downloader (like aria2) from current pure python one.
+- Windows/MacOS doesn't work yet (so much for cross-platform), although fix should be simple; I just don't know various xdg path equivalents in it nor do I have motivation or means to test. However one needs to have tar, gzip etc. in the path which means the likes of msys2, git bash, WSL or whatever, and in those it just might work ootb.
+- Downloads from github could be slow in some parts of the world, nothing could done about that apart from maybe switching to an external downloader (like aria2) from current pure python one.

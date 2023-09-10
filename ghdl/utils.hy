@@ -1,4 +1,4 @@
-(import os stat requests shutil tempfile magic)
+(import os stat httpx shutil tempfile magic)
 
 
 (defclass Tempdir []
@@ -13,9 +13,10 @@
 
 (defn download_file [url filename]
   (print f"Downloading {url}")
-  (with [r (requests.get url :stream True :timeout 20)]
+  (with [r (httpx.stream "GET" url :timeout 20 :follow_redirects True)]
     (with [f (open filename "wb")]
-      (shutil.copyfileobj r.raw f))))
+      (for [chunk (r.iter_raw)]
+        (f.write chunk)))))
 
 
 (defn make-dir [dir]
