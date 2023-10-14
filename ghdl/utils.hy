@@ -49,6 +49,7 @@
   "application/x-7z-compressed"
   "application/x-unix-archive"
   "application/x-rpm"
+  "application/vnd.debian.binary-package"
 })
 
 (setv executable-mime-types #{

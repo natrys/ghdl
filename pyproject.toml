@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "ghdl"
-version = "0.4.2"
-description = "Package manager for Github Release binaries"
+version = "0.4.3"
+description = "Binary Manager for Github Releases"
 authors = ["Imran Khan <imran@khan.ovh>"]
 license = "AGPL-3.0-or-later"
 
@@ -10,7 +10,7 @@ ghdl = { reference = "bin/ghdl", type = "file" }
 delete = { reference = "bin/ghdl-delete-repo", type = "file" }
 
 [tool.poetry.dependencies]
-python = ">=3.8,<3.12"
+python = ">=3.8,<3.13"
 xtract = { version = "0.1a3", allow-prereleases = true }
 xdg = "^4.0.1"
 python-dateutil = "^2.8.1"

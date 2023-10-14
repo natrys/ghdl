@@ -114,6 +114,12 @@
     (utils.download_file record.url filename)
 
     (when (and record.isArchive? (utils.isArchive? filename))
+      (when (.endswith filename ".deb")
+        (os.system f"ar x {filename} >/dev/null 2>&1")
+        (os.remove "debian-binary")
+        (os.remove "control.tar.xz")
+        (os.remove filename)
+        (setv filename "data.tar.xz"))
       (xtract.xtract filename :all True)
       (os.remove filename)
       (setv filename (file-select record.basename-glob)))
