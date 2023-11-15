@@ -40,14 +40,15 @@
 
 (defn/a add-remote-metadata [record client]
   (setv remote-metadata
-        (await (remote.metadata record.repo record.pre-release? client Config.token)))
-
-  ;; Network error
-  (when (not remote-metadata)
-    (do
-      (setv record.toUpdate? False)
-      (.append Config.failures #(record.repo "Network"))
-      (return)))
+        (try
+          (await (remote.metadata record client Config.token))
+          (except [e []]
+            (print f"Failed to fetch remote data from Github API for {record.repo}")
+            (print (traceback.format_exc))
+            (setv record.toUpdate? False)
+            (setv record.url "N/A")
+            (.append Config.failures #(record.repo "Network"))
+            (return))))
 
   (setv record.tag remote-metadata.tag)
   (setv record.timestamp remote-metadata.timestamp)
@@ -109,6 +110,8 @@
 
 
 (defn process [record]
+  (unless record.toUpdate? (return))
+
   (with [(utils.Tempdir)]
     (setv filename (-> record.url (.split "/") (get -1)))
     (utils.download_file record.url filename)

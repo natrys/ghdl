@@ -24,6 +24,5 @@
     (print f"Name: {self.name}")
     (print f"Exists?: {self.exists?}")
     (print f"Update?: {self.toUpdate?}")
-    ;(print f"Archive?: {self.isArchive?}")
     (print f"URL: {self.url}")
     (print "---------------")))

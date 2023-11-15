@@ -245,5 +245,5 @@ python-magic = "*"
 
 [metadata]
 lock-version = "2.0"
-python-versions = ">=3.8,<3.12"
-content-hash = "4275e7025c449aad18691eb0a7fbfe98eb590648aa9a4c20c06c680cba9e3070"
+python-versions = ">=3.8,<3.13"
+content-hash = "9b609c068a6713e0398d62b575baf2e97e7eadf054245ef8cd3a92daff649ee7"

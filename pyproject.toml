@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ghdl"
-version = "0.4.3"
+version = "0.4.4"
 description = "Binary Manager for Github Releases"
 authors = ["Imran Khan <imran@khan.ovh>"]
 license = "AGPL-3.0-or-later"

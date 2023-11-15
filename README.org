@@ -103,6 +103,16 @@ Sometimes you might want to pin a particular repo to a particular architecture a
 
 As this is an aarch64 specific project, pinning ensures the recipe won't even be run on say x86_64, so you are spared of the failure message.
 
+***** =:release-filter=
+
+Some projects release multiple unrelated kind of artefacts under same repo. While we still can't have multiple entries for same repo in ghdl, if you want to filter a particular kind of release amidst many, this is helpful. For example ~biomejs/biome~ repo releases VSCode Extension and CLI under same repo, if we just want the CLI, we need to first find the matching release:
+
+#+begin_src hy
+(repo "biomejs/biome"
+  :release-filter "\\bCLI\\b" ;; regex with word boundary
+  :asset-filter f"linux-x64") ;; this will now look into the release found by :release-filter
+#+end_src
+
 **** Advanced Configuration
 
 The goal is to eventually define something that hopefully can continue to work cross-platform. So ghdl config file is actually Hy code, which means one can do whatever they can in python, and some useful python modules (=re=, =platform= etc.) are loaded already:

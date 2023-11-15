@@ -36,6 +36,8 @@
             (-> record.repo (.split "/") (get 1)))
       (setv record.name (get info "name")))
 
+  (setv record.release-filter (.get info "release_filter" None))
+
   (when (in "archive" info)
     (setv record.isArchive? (get info "archive")))
 
