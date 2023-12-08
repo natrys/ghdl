@@ -39,6 +39,8 @@
 
 
 (defn/a add-remote-metadata [record client]
+  (setv record.url None)
+
   (setv remote-metadata
         (try
           (await (remote.metadata record client Config.token))
@@ -46,7 +48,6 @@
             (print f"Failed to fetch remote data from Github API for {record.repo}")
             (print (traceback.format_exc))
             (setv record.toUpdate? False)
-            (setv record.url "N/A")
             (.append Config.failures #(record.repo "Network"))
             (return))))
 
@@ -57,7 +58,6 @@
   (if (not dl-url)
       (do
         (setv record.toUpdate? False)
-        (setv record.url "N/A")
         (.append Config.failures #(record.repo "No Matching URL"))
         (return))
       (setv record.url dl-url)))

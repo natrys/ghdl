@@ -85,10 +85,6 @@
   :pin "x86_64"
   :asset-filter "linux64")
 
-(repo "ogham/exa"
-  :pin "x86_64"
-  :asset-filter os-arch)
-
 (repo "rancher/k3s"
   :asset-filter
     (fn [name]
@@ -152,17 +148,16 @@
   :name "purs"
   :pin "x86_64"
   :asset-filter
-    (fn [url]
-      (and
-        (in (.lower (platform.system)) url)
-        (.endswith url "tar.gz"))))
+    (fn [name]
+      (cond (= my-arch "x86_64") (= name "linux64.tar.gz")
+            (= my-arch "aarch64") (= name "linux-arm64.tar.gz"))))
 
 (repo "purescript/spago"
   :pin "x86_64"
   :asset-filter f"{my-os}.*tar\\.gz$")
 
 (repo "derailed/k9s"
-  :asset-filter os-arch)
+  :asset-filter f"{os-arch}\\.tar\\.gz$")
 
 (repo "exercism/cli"
   :name "exercism"
@@ -177,16 +172,11 @@
 
 (repo "kmonad/kmonad"
   :prerelease True
-  :asset-filter my-os
+  :asset-filter "kmonad"
   :pin "x86_64")
 
 (repo "rust-analyzer/rust-analyzer"
   :asset-filter rust)
-
-(repo "mun-lang/mun"
-  :asset-filter "linux64"
-  :pin "x86_64"
-  :prerelease True)
 
 (repo "hairyhenderson/gomplate"
   :asset-filter f"{os-arch}-slim")
@@ -275,6 +265,7 @@
   :asset-filter f"{rust}.*?")
 
 (repo "tidwall/jj"
+  :pin "x86_64"
   :asset-filter os-arch)
 
 (repo "cli/cli"
@@ -313,6 +304,7 @@
   :asset-filter os-arch)
 
 (repo "networkimprov/mnm-hammer"
+  :pin "x86_64"
   :prerelease True
   :asset-filter os-arch)
 
@@ -332,9 +324,6 @@
 
 (repo "cloudflare/cloudflared"
   :asset-filter f"cloudflared-{os-arch}$")
-
-(repo "hashicorp/terraform-ls"
-  :asset-filter os-arch)
 
 (repo "aquasecurity/trivy"
   :asset-filter f"{os-arch}.*gz$")
@@ -388,7 +377,7 @@
   :asset-filter os-arch)
 
 (repo "benbjohnson/litestream"
-  :asset-filter f"{os-arch}-static")
+  :asset-filter f"{os-arch}\\.tar\\.gz$")
 
 (repo "haampie/libtree"
   :asset-filter f"{my-arch}$")
@@ -403,12 +392,6 @@
   :prerelease True
   :asset-filter f"{my-os}_sqlite_{arch-pattern}")
 
-(repo "gravitl/netmaker"
-  :asset-filter
-    (fn [url]
-      (cond (= my-arch "x86_64") (.endswith url "netclient")
-            (= my-arch "aarch64") (.endswith url "arm64"))))
-
 (repo "timothyYe/godns"
   :asset-filter os-arch)
 
@@ -419,7 +402,7 @@
 
 (repo "Orange-OpenSource/hurl"
   :basename-glob "hurl"
-  :asset-filter f"{arch-pattern}-{my-os}")
+  :asset-filter rust)
 
 (repo "tailwindlabs/tailwindcss"
   :asset-filter os-arch
@@ -455,3 +438,94 @@
 (repo "Wilfred/difftastic"
   :name "difft"
   :asset-filter rust)
+
+(repo "terrastruct/d2"
+  :asset-filter os-arch)
+
+(repo "sigoden/dufs"
+  :asset-filter rust)
+
+(repo "slashbaseide/slashbase"
+  :name "Slashbase"
+  :pin "x86_64"
+  :asset-filter "linux_amd64")
+
+(repo "jdxcode/rtx"
+  :asset-filter os-arch)
+
+(repo "PostgREST/postgrest"
+  :asset-filter "linux-static"
+  :pin "x86_64")
+
+(repo "rust-cross/cargo-zigbuild"
+  :asset-filter f"{rust}.*gz$")
+
+(repo "netbirdio/netbird"
+  :asset-filter f"netbird_.*{os-arch}\\.tar\\.gz")
+
+(repo "jetpack-io/devbox"
+  :asset-filter os-arch)
+
+(repo "charliermarsh/ruff"
+  :asset-filter f"{rust}-musl\\.tar\\.gz$")
+
+(repo "chiselstrike/homebrew-tap"
+  :name "turso"
+  :asset-filter os-arch)
+
+(repo "amacneil/dbmate"
+  :asset-filter os-arch)
+
+(repo "noisetorch/NoiseTorch"
+  :pin "x86_64"
+  :asset-filter f"{arch-pattern}.*tgz$")
+
+(repo "slint-ui/slint"
+  :name "slint-lsp"
+  :pin "x86_64"
+  :asset-filter f"lsp-{my-os}")
+
+(repo "watchexec/cargo-watch"
+  :asset-filter f"{rust}.*?\\.tar\\.xz$")
+
+(repo "DarthSim/overmind"
+  :asset-filter f"{os-arch}\\.gz$")
+
+(repo "AmrDeveloper/GQL"
+  :asset-filter f"{rust}\\.gz$")
+
+(repo "mr-karan/doggo"
+  :basename-glob "doggo"
+  :asset-filter os-arch)
+
+(repo "rustic-rs/rustic"
+  :asset-filter f"{rust}\\-musl\\.tar\\.gz$")
+
+(repo "eza-community/eza"
+  :asset-filter rust)
+
+(repo "antonmedv/fx"
+  :asset-filter os-arch)
+
+(repo "replydev/cotp"
+  :asset-filter rust)
+
+(repo "orhun/kmon"
+  :asset-filter f"{rust}-musl\\.tar\\.gz$")
+
+(repo "biomejs/biome"
+  :release-filter "\\bCLI\\b"
+  :asset-filter f"{os-arch}")
+
+(repo "dnote/dnote"
+  :release-filter "cli\\-"
+  :asset-filter os-arch)
+
+(repo "yamafaktory/jql"
+  :asset-filter rust)
+
+(repo "01mf02/jaq"
+  :asset-filter rust)
+
+(repo "shuttle-hq/shuttle"
+  :asset-filter f"{rust}-musl")

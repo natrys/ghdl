@@ -3,6 +3,9 @@
 (require hyrule [-> assoc])
 
 
+(defclass NoMatchingReleaseException [Exception])
+
+
 (setv Remote (namedtuple "Record" '("tag" "timestamp" "url_data")))
 
 
@@ -23,7 +26,7 @@
     (when (bool (re.search pattern name))
       (return release)))
   (print f"No matching release found for: {release-filter}")
-  (raise BaseException))
+  (raise NoMatchingReleaseException))
 
 
 (defn/a get-remote [record client [token None]]
