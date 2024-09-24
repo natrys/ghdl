@@ -38,7 +38,7 @@
       (run-filter asset-filter)))
 
 
-(defn/a add-remote-metadata [record client]
+(defn :async add-remote-metadata [record client]
   (setv record.url None)
 
   (setv remote-metadata
@@ -76,18 +76,18 @@
         (and it (!= repo it))))
 
 
-(defn/a fetch-remote-local-metadata [records]
+(defn :async fetch-remote-local-metadata [records]
   (setv limits (httpx.Limits :max_connections 10))
-  (with/a [client (httpx.AsyncClient :base_url "https://api.github.com/repos/"
-                                     :limits limits
-                                     :follow_redirects True)]
+  (with [:async client (httpx.AsyncClient :base_url "https://api.github.com/repos/"
+                                          :limits limits
+                                          :follow_redirects True)]
     (await
       (asyncio.gather
         #*(gfor record records (fetch-remote-local-metadata-1 record client))
         :return_exceptions True))))
 
 
-(defn/a fetch-remote-local-metadata-1 [record client]
+(defn :async fetch-remote-local-metadata-1 [record client]
   (when (check-single record.repo) (return))
   (when (and record.pin (not (= (platform.machine) record.pin))) (return))
 

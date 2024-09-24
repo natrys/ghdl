@@ -1,0 +1,3 @@
+graft ghdl
+global-exclude *.py[cod] *.swp __pycache__/*
+prune *.egg-info

@@ -1,6 +1,7 @@
 (import json re dateutil.parser collections [namedtuple])
 
-(require hyrule [-> assoc])
+(import hyrule [assoc])
+(require hyrule [->])
 
 
 (defclass NoMatchingReleaseException [Exception])
@@ -29,7 +30,7 @@
   (raise NoMatchingReleaseException))
 
 
-(defn/a get-remote [record client [token None]]
+(defn :async get-remote [record client [token None]]
   (setv headers {"Accept" "application/vnd.github.v3+json"})
   (setv api (get-api record))
   (when token (assoc headers "Authorization" f"token {token}"))
@@ -49,5 +50,5 @@
           urls))
 
 
-(defn/a metadata [record client [token None]]
+(defn :async metadata [record client [token None]]
   (get-metadata (await (get-remote record client token))))

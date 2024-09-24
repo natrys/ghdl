@@ -1,27 +1,34 @@
-[tool.poetry]
+[project]
 name = "ghdl"
-version = "0.4.6"
 description = "Binary Manager for Github Releases"
-authors = ["Imran Khan <imran@khan.ovh>"]
-license = "AGPL-3.0-or-later"
+authors = [{name = "Imran Khan", email = "imran@khan.ovh"}]
+license = {file = "LICENSE"}
+requires-python = ">=3.8,<3.13"
+dynamic = ["version"]
+dependencies = [
+  "xtract ==0.1a3",
+  "xdg >=4.0.1",
+  "python-dateutil >=2.8.1",
+  "docopt >=0.6.2",
+  "python-magic >=0.4.25",
+  "hyrule >=0.7.0",
+  "hy >=1.0.0",
+  "httpx >=0.27.0"
+]
 
-[tool.poetry.scripts]
-ghdl = { reference = "bin/ghdl", type = "file" }
-delete = { reference = "bin/ghdl-delete-repo", type = "file" }
+[tool.setuptools]
+script-files = ["bin/ghdl", "bin/ghdl-delete-repo"]
+include-package-data = true
 
-[tool.poetry.dependencies]
-python = ">=3.8,<3.13"
-xtract = { version = "0.1a3", allow-prereleases = true }
-xdg = "^4.0.1"
-python-dateutil = "^2.8.1"
-docopt = "^0.6.2"
-python-magic = "^0.4.25"
-hyrule = "^0.5.0"
-hy = "^0.28.0"
-httpx = "^0.27.0"
+[tool.setuptools.dynamic]
+version = {attr = "ghdl.__version__"}
 
-[tool.poetry.dev-dependencies]
+[tool.uv]
+prerelease = "if-necessary-or-explicit"
+python-downloads = "never"
+python-preference = "system"
+dev-dependencies = []
 
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

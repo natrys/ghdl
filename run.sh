@@ -1,14 +1,18 @@
 #!/bin/sh
 
-setup() {
-  sed -i -E "/^version = /s/\".*\"/$(grep -o -P '__version__ \K.*\"' ghdl/__init__.hy)/" pyproject.toml
-  poetry build
+build() {
+  # sed -i -E "/^version = /s/\".*\"/$(grep -o -P '__version__ = \K.*\"' ghdl/__init__.py)/" pyproject.toml
+  uv build
 }
 
 release() {
-  #python setup.py sdist bdist_wheel
-  #twine upload --repository-url https://test.pypi.org/legacy/ dist/*
-  twine upload dist/*
+  # python setup.py sdist bdist_wheel
+  # uv run twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+  uv run twine upload dist/*
+}
+
+clean() {
+  rm -rf dist/ ghdl.egg-info/
 }
 
 update() {
