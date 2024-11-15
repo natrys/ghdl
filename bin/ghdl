@@ -4,10 +4,10 @@
 
 Usage:
   ghdl
-  ghdl (-f <repo> | --force <repo>)
   ghdl [-n | --dry-run]
   ghdl (-h | --help)
   ghdl (-v | --version)
+  ghdl [-n] (-f <repo> | --force <repo>)
 
 Options:
   -h --help               Show this screen.

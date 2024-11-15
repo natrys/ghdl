@@ -30,7 +30,7 @@
     (for [[asset url] url_data]
       (when (f asset)
         (return url))))
-  
+
   (if (isinstance asset-filter str)
       (do
         (setv pattern (re.compile asset-filter re.IGNORECASE))
@@ -71,7 +71,7 @@
       (setv record.toUpdate? False))))
 
 
-(defn check-single [repo]
+(defn skip-single [repo]
   (as-> Config.single it
         (and it (!= repo it))))
 
@@ -88,7 +88,7 @@
 
 
 (defn :async fetch-remote-local-metadata-1 [record client]
-  (when (check-single record.repo) (return))
+  (when (skip-single record.repo) (return))
   (when (and record.pin (not (= (platform.machine) record.pin))) (return))
 
   (await (add-remote-metadata record client))
@@ -98,7 +98,7 @@
 
 (defn process-loop [records]
   (for [record records]
-    (when (check-single record.repo) (continue))
+    (when (skip-single record.repo) (continue))
     (when (and record.pin (not (= (platform.machine) record.pin))) (continue))
 
     (when record.toUpdate?
@@ -142,6 +142,7 @@
   (setv Config.dry-run True))
 
 
+;; If a repo is deleted from config, then running this just deletes entry from DB
 (defn set-single [repo]
   (local-db.delete-row repo)
   (setv Config.single repo))

@@ -20,13 +20,13 @@
   (-> timestring (dateutil.parser.parse) (.strftime "%s") (int)))
 
 
-(defn find-matching-release [resp release-filter]
+(defn find-matching-release [resp record]
+  (setv pattern (re.compile record.release-filter))
   (for [release resp]
-    (setv name (get release "name"))
-    (setv pattern (re.compile release-filter))
-    (when (bool (re.search pattern name))
+    (when (and (bool (re.search pattern (get release "name")))
+               (= (get release "prerelease") record.pre-release?))
       (return release)))
-  (print f"No matching release found for: {release-filter}")
+  (print f"No matching release found for: {record.release-filter}")
   (raise NoMatchingReleaseException))
 
 
@@ -37,7 +37,7 @@
   (setv resp (.json (await (client.get api :headers headers))))
   (cond
     record.pre-release? (get resp 0)
-    record.release-filter (find-matching-release resp record.release-filter)
+    record.release-filter (find-matching-release resp record)
     True resp))
 
 

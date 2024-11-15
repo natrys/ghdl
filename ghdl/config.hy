@@ -31,10 +31,9 @@
 
   (setv record.asset-filter (get info "asset_filter"))
 
-  (if (not (in "name" info))
-      (setv record.name
-            (-> record.repo (.split "/") (get 1)))
-      (setv record.name (get info "name")))
+  (if (in "name" info)
+      (setv record.name (get info "name"))
+      (setv record.name (-> record.repo (.split "/") (get 1))))
 
   (setv record.release-filter (.get info "release_filter" None))
 
