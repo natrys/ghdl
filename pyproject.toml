@@ -3,7 +3,7 @@ name = "ghdl"
 description = "Binary Manager for Github Releases"
 authors = [{name = "Imran Khan", email = "imran@khan.ovh"}]
 license = {file = "LICENSE"}
-requires-python = ">=3.8,<3.13"
+requires-python = ">=3.8,<3.14"
 dynamic = ["version"]
 dependencies = [
   "xtract ==0.1a3",
@@ -29,6 +29,11 @@ python-downloads = "never"
 python-preference = "system"
 dev-dependencies = []
 
+[tool.hatch.version]
+path = "ghdl/__init__.py"
+
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+#requires = ["setuptools"]
+#build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
