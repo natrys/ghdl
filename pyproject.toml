@@ -35,7 +35,6 @@ path = "ghdl/__init__.py"
 prerelease = "if-necessary-or-explicit"
 python-downloads = "never"
 python-preference = "system"
-dev-dependencies = []
 
 [build-system]
 requires = ["setuptools"]
