@@ -44,7 +44,7 @@
   (setv remote-metadata
         (try
           (await (remote.metadata record client Config.token))
-          (except [e []]
+          (except [e Exception]
             (print f"Failed to fetch remote data from Github API for {record.repo}")
             (print (traceback.format_exc))
             (setv record.toUpdate? False)
@@ -104,7 +104,7 @@
     (when record.toUpdate?
       (try
         (process record)
-        (except [e []]
+        (except [e Exception]
           (print f"Failed to process {record.repo}")
           (print (traceback.format_exc)))))))
 

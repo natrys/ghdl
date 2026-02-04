@@ -34,7 +34,15 @@
   (setv headers {"Accept" "application/vnd.github.v3+json"})
   (setv api (get-api record))
   (when token (assoc headers "Authorization" f"token {token}"))
-  (setv resp (.json (await (client.get api :headers headers))))
+  (setv response (await (client.get api :headers headers)))
+  (when (!= response.status_code 200)
+    (raise (Exception f"Github API error {response.status_code} for {record.repo}")))
+  (setv resp
+        (try
+          (.json response)
+          (except [e Exception]
+            (raise (Exception f"Invalid JSON from Github API for {record.repo}")))))
+
   (cond
     record.pre-release? (get resp 0)
     record.release-filter (find-matching-release resp record)
